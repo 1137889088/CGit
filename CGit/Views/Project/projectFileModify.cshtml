@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CGit</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/projectFiles.css">
+    <link rel="stylesheet" href="~/edit.md/css/editormd.css">
+</head>
+<body>
+<div class="row clearfix">
+    <!--左边空位-->
+    <div class="col-md-2 column">
+    </div>
+    <div class="col-md-8 column">
+        <div style="color: #0e90d2;font-size: 18px;margin-bottom: 20px;margin-top: 50px">
+            <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 12 16" width="12">
+                <path fill-rule="evenodd"
+                      d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"></path>
+            </svg>
+            <a href="#">1137889088</a><span style="color: #0e0e0e;margin:0 4px 0 4px">/</span><a href="#">C0Compiler</a>
+
+            <button type="button" style="float: right;height: 30px" class="btn btn-default">
+                <span class="glyphicon glyphicon-star"></span>
+                <span>关注</span>
+            </button>
+        </div>
+        <hr/>
+        <div>
+            <span style="font-size: 24px">教材管理系统</span>
+            <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash icon"></span>删除仓库
+            </button>
+            <button type="button" data-toggle="modal" data-target="#modifyTitle" style="float: right; margin-right: 8px" class="btn btn-default ">
+                <span class="glyphicon glyphicon-edit icon"></span>修改标题
+            </button>
+            <button class="btn btn-default" style="float: right;margin-right: 8px">
+                <a href="~/Project/projectComment" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
+            </button>
+        </div>
+        <hr/>
+        <div>
+            <div class="btn-group">
+                <button class="btn btn-default">提交版本</button>
+                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#">版本一</a>
+                    </li>
+                    <li class="disabled">
+                        <a href="#">当前版本</a>
+                    </li>
+                    <li class="divider">
+                    </li>
+                    <li>
+                        <a href="#">版本一</a>
+                    </li>
+                </ul>
+            </div>
+            <span style="margin: 5px 0px 0 25px; top: 5px">
+                    <a href="#">Home</a>/
+                    <a href="#">Library</a>/
+                    Data
+            </span>
+            <button type="button" style="float: right; margin-right: 8px" class="btn btn-default ">
+                <a href="#"><span class="glyphicon glyphicon-edit icon"></span>保存文件</a>
+            </button>
+        </div>
+        <div class="commit-tease">
+            <img alt="1137889088" height="20" src="/img/19888480.jpg" width="20">
+            <a href="#" style="margin-top: 2px">1137889088</a>
+            <span style="float: right">提交时间：26 Jul 2016</span>
+        </div>
+        <div id="test-editormd"></div>
+    </div>
+    <div class="col-md-2 column">
+    </div>
+</div>
+<!-- 修改标题模态框（Modal） -->
+<div class="modal fade" id="modifyTitle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">修改标题</h4>
+            </div>
+            <div class="modal-body" align="center">
+                <div class="margin">新标题：<input type="password"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/edit.md/js/editormd.js"></script>
+<script type="text/javascript">
+    var testEditor;
+    $(function() {
+        $.get('/edit.md/test.txt', function (md) {
+            testEditor = editormd("test-editormd", {
+                width: "100%",
+                height: 740,
+                path : '/edit.md/lib/',
+                theme : "dark",
+                previewTheme : "dark",
+                editorTheme : "pastel-on-dark",
+                markdown : md,
+                codeFold : true,
+                //syncScrolling : false,
+                saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+                searchReplace : true,
+                //watch : false,                // 关闭实时预览
+                htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+                //toolbar  : false,             //关闭工具栏
+                previewCodeHighlight : true, // 关闭预览 HTML 的代码块高亮，默认开启
+                emoji : true,
+                taskList : true,
+                tocm            : true,         // Using [TOCM]
+                tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+                flowChart : true,             // 开启流程图支持，默认关闭
+                sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+                //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+                //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+                //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+                //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+                //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+                imageUpload : true,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/php/upload.php",
+                onload : function() {
+                    console.log('onload', this);
+                    //this.fullscreen();
+                    //this.unwatch();
+                    //this.watch().fullscreen();
+
+                    //this.setMarkdown("#PHP");
+                    //this.width("100%");
+                    //this.height(480);
+                    //this.resize("100%", 640);
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

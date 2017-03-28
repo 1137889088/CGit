@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>CGit</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <!--顶部导航栏开始-->
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="navbar-header" style="width: 150px">
+                    <a href="~/Home/index"><img src="~/img/logo.png" height="50px"/></a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <!--class="active"-->
+                        <li>
+                            <a href="#">活跃用户</a>
+                        </li>
+                        <li>
+                            <a href="~/User/frame.html">热门项目</a>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="要搜索的项目，用户..."/>
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                        <li>
+                            <a href="~/Home/register">注册</a>
+                        </li>
+                        <li>
+                            <a href="~/Home/login">登录</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 0px">
+                                <img style="padding: 0px" src="img/logo1.png" height="50px" width="50"/>
+                                <strong class="caret"></strong>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li style="margin-left: 20px">
+                                    登录用户
+                                </li>
+                                <li>
+                                    <a href="userHome.html" target="content">用户名</a>
+                                </li>
+                                <li class="divider">
+                                <li>
+                                    <a href="myFollow.html" target="content">我的关注</a>
+                                </li>
+                                <li>
+                                    <a href="userHome.html" target="content">我的仓库</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">注销</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <br/><br/>
+        <!--顶部导航栏结束-->
+    </div>
+</div>
+<iframe marginwidth="0" name="content" src="hotProject.html" marginheight="0" width="100%" id="urlIframe" frameborder="0" scrolling="no" onload="reinitIframe()"></iframe>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<!--让iframe显示全部内容-->
+<script type="text/javascript">
+    function reinitIframe() {
+        var iframe = document.getElementById("urlIframe");
+        try {
+            var bHeight = iframe.contentWindow.document.body.scrollHeight;
+            iframe.height = bHeight;
+        }
+        catch (ex) {
+        }
+    }
+</script>
+</body>
+</html>

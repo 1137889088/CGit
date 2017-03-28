@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>CGit</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="~/css/index.css">
+</head>
+<body>
+<div align="center">
+    <a href="~/Home/index"> <img src="~/img/logo.png"/> 
+    <h1 style="color: white">CGit, A Code hosting platform</h1></a>
+</div>
+<div class="register-container container">
+    <div class="row">
+        <div style="margin-top: 100px" class="iphone span5">
+            <img src="~/img/code.jpg"/>
+        </div>
+        <div class="register span6">
+            <form action="~/Home/doRegeist" method="post">
+                <h2>注册 <span class="red"><strong>CGit</strong></span> 账号</h2>
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" placeholder="起一个好听的名字吧...">
+                <label for="email">邮箱</label>
+                <input type="text" id="email" name="email" placeholder="请输入邮箱...">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入一个密码...">
+                <label for="confirmPassword">确认密码</label>
+                <input type="password" id="confirmPassword" name="password" placeholder="重新输入密码...">
+                <button type="submit">注册</button>
+                <a href="/Home/index"><button type="button">返回主页</button></a>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Javascript -->
+<script src="~/assets/js/jquery-1.8.2.min.js"></script>
+<script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/assets/js/jquery.backstretch.min.js"></script>
+<script src="~/assets/js/scripts.js"></script>
+</body>
+</html>

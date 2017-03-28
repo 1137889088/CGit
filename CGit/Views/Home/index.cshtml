@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>CGit</title>
+    <link href="@Url.Content("~/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/index.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <!--顶部导航栏开始-->
+            <div class="col-md-12 column">
+                <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+                    <div class="navbar-header" style="width: 150px">
+                        <a href="~/Home/Index"><img src="@Url.Content("~/img/logo.png")" height="50px" /></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <!--class="active"-->
+                            <li>
+                                <a href="#">活跃用户</a>
+                            </li>
+                            <li>
+                                <a href="~/User/frame">热门项目</a>
+                            </li>
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="要搜索的项目，用户..." />
+                            </div> 
+                            <button type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                            <li>
+                                <a href="~/Home/register">注册</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/login">登录</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <br /><br />
+            <!--顶部导航栏结束-->
+        </div>
+    </div>
+    <div class='imgCharacters'>
+        <h1>CGit, A Code hosting platform</h1>
+        <p>CGit，一个代码托管平台！</p>
+        <div style="margin-top: 30px;">
+            <a href="~/Home/login"><img src="~/img/loginButton.png"></a>
+            <a href="~/Home/register"><img src="~/img/registerButton.png"></a>
+            <p style="margin-top: 170px;font-size: 15px;font-weight: normal">
+                电脑故障，代码丢失无法找回；随身带着电脑或者项目的移动存储设备十分不便;<br />
+                CGit为您提供了一种，快捷方便的解决方案。在这里你可以将项目上传至云端，在任意需要的时候下载，快捷又方便。
+            </p>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+</body>
+</html>

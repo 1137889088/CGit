@@ -1,0 +1,53 @@
+.icon {
+    margin-right: 8px;
+}
+
+.commit-tease {
+    position: relative;
+    padding: 10px;
+    margin-bottom: -1px;
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 20px;
+    color: #586069;
+    background-color: #f1f8ff;
+    border: 1px solid #c8e1ff;
+    border-radius: 3px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.octicon-file-directory {
+    color: rgba(3, 47, 98, 0.5);
+}
+
+.octicon {
+    display: inline-block;
+    vertical-align: text-top;
+    fill: currentColor;
+}
+
+.top-posion2 {
+    margin-left: 10px;
+}
+
+.filename {
+    color: #0366d6;
+    line-height: 33px;
+}
+
+.fileLine {
+    border-bottom: 1px solid #c8e1ff;
+    border-left: 1px solid #c8e1ff;
+    border-right: 1px solid #c8e1ff;
+    height: 33px;
+}
+.commentLine {
+    padding: 10px 20px 10px 20px;
+    border-bottom: 1px solid #c8e1ff;
+    border-left: 1px solid #c8e1ff;
+    border-right: 1px solid #c8e1ff;
+}
+.return{
+    margin-left: 50px;
+}

@@ -1,0 +1,67 @@
+.imgCharacters {
+    font-family: Courier;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    font-size: 36px;
+    font-weight: bold;
+    margin: 150px 0 28px 0;
+    min-height: 1rem;
+    box-sizing: inherit;
+    text-align: center;
+    color: white;
+}
+body{
+    background: url(../img/bg-banner.jpg)repeat;
+    padding:0px 0px 30px 0px;
+    font-family: 'Roboto', sans-serif;
+}
+.imgLoginButton{
+    color: #fe7300;
+    border-color: #fe7300;
+    background: rgba(254,115,0,0.1);
+    line-height: 1.2223;
+    min-width: 180px;
+    margin-right: 15px;
+    border: 1px solid;
+    box-shadow: 0px 0em 0px 0px rgba(39,41,43,0.15) inset;
+    text-shadow: none;
+    font-size: 1.28571429rem;
+    padding: .5em .92857em;
+    font-weight: normal;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1em;
+    outline: none;
+    font-family: -apple-system,"Helvetica Neue",Helvetica,"Nimbus Sans L","Segoe UI",Arial,"Liberation Sans","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Wenquanyi Micro Hei","WenQuanYi Zen Hei","ST Heiti",SimHei,"WenQuanYi Zen Hei Sharp",sans-serif;
+    margin: 0em 0.25em 0em 0em;
+    text-transform: none;
+    font-style: normal;
+    text-align: center;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+}
+.imgRegeistButton{
+    margin-right: 0;
+    min-width: 180px;
+    line-height: 1.335;
+    text-shadow: none;
+    color: #fff;
+    background: #fe7300;
+    font-size: 1.28571429rem;
+    padding: .5em .92857em;
+    font-weight: normal;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1em;
+    outline: none;
+    border: none;
+    vertical-align: baseline;
+    font-family: -apple-system,"Helvetica Neue",Helvetica,"Nimbus Sans L","Segoe UI",Arial,"Liberation Sans","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Wenquanyi Micro Hei","WenQuanYi Zen Hei","ST Heiti",SimHei,"WenQuanYi Zen Hei Sharp",sans-serif;
+    margin: 0em 0.25em 0em 0em;
+    font-style: normal;
+    text-align: center;
+    transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+}
