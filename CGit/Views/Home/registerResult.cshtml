@@ -23,21 +23,9 @@
             <img src="~/img/code.jpg"/>
         </div>
         <div class="register span6">
-            <form action="/Home/doRegeist" method="post">
-                <h2>注册 <span class="red"><strong>CGit</strong></span> 账号</h2>
-                <label for="username">用户名</label>
-                <input type="text" id="username" name="user.name" placeholder="起一个好听的名字吧...">
-                <label for="email">邮箱</label>
-                <input type="text" id="email" name="user.email" placeholder="请输入邮箱...">
-                <label for="password">密码</label>
-                <input type="password" id="password" placeholder="请输入一个密码...">
-                <label for="confirmPassword">确认密码</label>
-                <input type="password" id="confirmPassword" name="user.pwd" placeholder="重新输入密码...">
-                <label for="confirmPassword">地区</label>
-                <input type="text" id="area" name="user.area" placeholder="输入所在地区...">
-                <label for="resume">个人简介</label>
-                <input type="text" id="resume" name="user.resume" placeholder="描述自己...">
-                <button type="submit"id="sub">注册</button>
+            <form>
+                <h2>@ViewData["msg"]</h2>
+                <label>@ViewData["result"]</label>
                 <a href="/Home/index"><button type="button">返回主页</button></a>
             </form>
         </div>
