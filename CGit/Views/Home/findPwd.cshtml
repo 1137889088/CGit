@@ -13,7 +13,7 @@
             <div class="col-md-12 column">
                 <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
                     <div class="navbar-header" style="width: 150px">
-                        <a href="~/Home/index"><img src="img/logo.png" height="50px" /></a>
+                        <a href="~/Home/index"><img src="~/img/logo.png" height="50px" /></a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
@@ -49,7 +49,7 @@
         <h2>找回密码</h2>
 
         <div class="login-top">
-            <form action="~/Home/doFindPwd">
+            <form action="~/Home/doFindPwd" method="post">
                 <h1><a href="~/Home/index"> <img src="~/img/logo.png" height="60" width="156" /></a></h1>
                 <input type="text" name="eamil" placeholder="请输入要找回账号的注册邮箱...">
                 <div><strong style="color:red">@ViewData["msg"]</strong></div>
