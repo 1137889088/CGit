@@ -43,7 +43,7 @@ namespace CGit.Controllers
                 if (dao.save(user) > 0)
                 {
                     ViewData["msg"] = "注册成功";
-                    ViewData["result"] = "欢迎你，您已成功注册<strong> CGit</ strong > 账号";
+                    ViewData["result"] = "欢迎你，您已成功注册<strong> CGit</strong > 账号";
                 }
                 else
                 {
@@ -74,7 +74,18 @@ namespace CGit.Controllers
 
         public ActionResult doFindPwd()
         {
-            return RedirectToAction("frame", "User");
+            Src.Dao.UserDao dao = new Src.Dao.UserDao();
+            string email = Request["eamil"];
+            User user = dao.findUserByEmail(email);
+            if (user == null)
+            {
+                ViewData["msg"] = "该邮箱未注册,请重新输入";
+            }
+            else {
+                ViewData["msg"] = "找回密码成功，请到邮箱查看";
+                Src.Util.EmailUtil.SentMail(email, "您的密码找回成功，密码为" + user.pwd, "CGit找回密码", "CGit");
+            }
+            return View("findPwd");
         }
     }
 }

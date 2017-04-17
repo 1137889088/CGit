@@ -157,9 +157,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Src\Dao\Test.cs" />
     <Compile Include="Src\Dao\UserDao.cs" />
     <Compile Include="Src\Util\DBUtil.cs" />
+    <Compile Include="Src\Util\EmailUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

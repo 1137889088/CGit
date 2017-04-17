@@ -51,14 +51,15 @@
         <div class="login-top">
             <form action="~/Home/doFindPwd">
                 <h1><a href="~/Home/index"> <img src="~/img/logo.png" height="60" width="156" /></a></h1>
-                <input type="text" placeholder="请输入要找回账号的注册邮箱...">
+                <input type="text" name="eamil" placeholder="请输入要找回账号的注册邮箱...">
+                <div><strong style="color:red">@ViewData["msg"]</strong></div>
                 <div class="forgot">
                     <input type="submit" value="立即找回">
                 </div>
             </form>
         </div>
         <div class="login-bottom">
-            <h3>&nbsp;<a href="~/login.html">返回</a>&nbsp 登录</h3>
+            <h3>&nbsp;<a href="~/Home/login">返回</a>&nbsp 登录</h3>
         </div>
     </div>
     <script src="~/js/jquery-3.1.1.min.js"></script>

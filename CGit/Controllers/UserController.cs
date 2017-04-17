@@ -23,6 +23,7 @@ namespace CGit.Controllers
         }
         public ActionResult singOut()
         {
+            Session.Remove("loginUser");
             return RedirectToAction("login","Home");
         }
         public ActionResult hotProject()
