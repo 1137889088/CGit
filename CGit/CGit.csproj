@@ -172,6 +172,9 @@
     </Content>
     <Content Include="img\default.jpg" />
     <None Include="Views\Home\findPwd.cshtml" />
+    <Content Include="img\user\default.jpg" />
+    <Content Include="img\user\default.png" />
+    <Content Include="js\frame.js" />
     <Content Include="Views\Home\registerResult.cshtml" />
     <None Include="Views\Project\projectComment.cshtml" />
     <Content Include="SQL\CGit.sql" />

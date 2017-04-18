@@ -38,11 +38,31 @@ $("#imgSelect").change(function () {
         var $imgData = $img.cropper('getCroppedCanvas')
         var dataurl = $imgData.toDataURL('image/png');  //dataurl便是base64图片
         console.log(dataurl)
+        
         /* $("#previewyulan").attr("src",dataurl)
          //下面两种方法需要用到那种使用哪种即可,或者都不使用直接上传base64文件给后台即可，哈哈
          blob = dataURLtoBlob(dataurl);   //将base64图片转化为blob文件方法*/
     })
 });
+var path = "/img/user/";
+$(
+    function () {
+        var $img = $("#imgPreview");
+        var uri = $img.attr("src");
+        $.ajax({
+            url: uri,
+            type: 'HEAD',
+            error: function () {
+                console.info("file not");
+                $img.attr("src", path + "default.png");
+                $(".rounded").attr("src", path + "default.png")
+            },
+            success: function () {
+                console.info("file exists");
+            }
+        });
+    }
+);
 
 function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -52,6 +72,7 @@ function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
     }
     return new Blob([u8arr], { type: mime });
 }
+
 /**
  * 取到文件上传路径
  * @param file 上传的文件
