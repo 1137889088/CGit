@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 /// <summary>
-/// 数据库操作类
+/// 数据库操作类简单封装
 /// </summary>
 namespace CGit.Dao
 {

@@ -3,7 +3,30 @@
  */
 
 /**
- * 头像上传预览
+* 判断头像是否存在
+*如果不存在就加载默认的头像
+*/
+var path = "/img/user/";
+$(
+    function () {
+        var $img = $("#imgPreview");
+        var uri = $img.attr("src");
+        $.ajax({
+            url: uri,
+            type: 'HEAD',
+            error: function () {
+
+                $img.attr("src", path + "default.png");
+                $(".rounded").attr("src", path + "default.png")
+            },
+            success: function () {
+
+            }
+        });
+    }
+);
+/**
+ * 头像上传裁剪
  */
 $("#imgSelect").change(function () {
     var file = this.files[0];
@@ -27,42 +50,127 @@ $("#imgSelect").change(function () {
         minCanvasHeight: 400,
         modal: true,
         crop: function (data) {
-            /* var $imgData=$img.cropper('getCroppedCanvas')
+            /*var $imgData=$img.cropper('getCroppedCanvas')
              var dataurl = $imgData.toDataURL('image/png');
-             $("#previewyulan").attr("src",dataurl)*/
+             $("#preview").attr("src", dataurl)*/
         }
     });
     $img.cropper('replace', imgUrl)
-   
-    $("#confirm").click(function () {
+
+    $("#upload").click(function () {
         var $imgData = $img.cropper('getCroppedCanvas')
         var dataurl = $imgData.toDataURL('image/png');  //dataurl便是base64图片
-        console.log(dataurl)
-        
-        /* $("#previewyulan").attr("src",dataurl)
-         //下面两种方法需要用到那种使用哪种即可,或者都不使用直接上传base64文件给后台即可，哈哈
-         blob = dataURLtoBlob(dataurl);   //将base64图片转化为blob文件方法*/
+
+        $.ajax({
+            type: "post",
+            url: "/User/imgUpload",
+            data: "imgData=" + dataurl,
+            success: function (msg) {
+
+            }   //操作成功后的操作！msg是后台传过来的值
+        });
     })
 });
-var path = "/img/user/";
-$(
-    function () {
-        var $img = $("#imgPreview");
-        var uri = $img.attr("src");
-        $.ajax({
-            url: uri,
-            type: 'HEAD',
-            error: function () {
-                console.info("file not");
-                $img.attr("src", path + "default.png");
-                $(".rounded").attr("src", path + "default.png")
-            },
-            success: function () {
-                console.info("file exists");
+
+
+/**
+*弹出框
+*/
+$(function () {
+    $('#oldPwd').popover({
+        trigger: 'manual', //触发方式
+        placement: 'right',
+        title: "",//设置 弹出框 的标题
+        html: true, // 为true的话，data-content里就能放html代码了
+        content: "密码错误请重新输入",//这里可以直接写字符串，也可以 是一个函数，该函数返回一个字符串；
+    })
+    $('#confirmPwd').popover({
+        trigger: 'manual', //触发方式
+        placement: 'right',
+        title: "",//设置 弹出框 的标题
+        html: true, // 为true的话，data-content里就能放html代码了
+        content: "两次的密码不一致请重新输入",//这里可以直接写字符串，也可以 是一个函数，该函数返回一个字符串；
+    })
+});
+
+/*
+* 旧密码检查
+*/
+var checkold = false;
+var checksame = false;
+$("#oldPwd").blur(function () {
+    var oldPwd = $("#oldPwd").val();
+    $.ajax({
+        type: "post",
+        url: "/User/checkPwd",
+        data: "oldPwd=" + oldPwd,
+        success: function (msg) {
+            if (msg == "false") {
+                $('#oldPwd').popover("show");
+                checkold = false;
+            } else {
+                checkold = true;
             }
-        });
+        }   //操作成功后的操作！msg是后台传过来的值
+    });
+})
+$("#oldPwd").focus(function () {
+    $('#oldPwd').popover("hide");
+})
+/*
+* 俩次的密码检查
+*/
+$("#oldPwd").blur(function () {
+    var newPwd = $("#newPwd").val();
+    var confirmPwd = $("#confirmPwd").val();
+    if (newPwd != confirmPwd) {
+        $('#confirmPwd').popover("show");
+        checksame = false;
+    } else {
+        checksame = true;
     }
-);
+})
+$("#confirmPwd").blur(function () {
+    var newPwd = $("#newPwd").val();
+    var confirmPwd = $("#confirmPwd").val();
+    if (newPwd != confirmPwd) {
+        $('#confirmPwd').popover("show");
+        checksame = false;
+    } else {
+        checksame = true;
+    }
+})
+$("#confirmPwd").focus(function () {
+    $('#confirmPwd').popover("hide");
+})
+/**
+*  修改密码
+*/
+$("#updatePwd").click(function () {
+    if (!checkold) {
+        $('#oldPwd').popover("show");
+        return;
+    }
+    if (!checksame) {
+        $('#confirmPwd').popover("show");
+        return;
+    }
+    var newPwd = $("#newPwd").val();
+    var oldPwd = $("#oldPwd").val();
+    $.ajax({
+        type: "post",
+        url: "/User/modifyPwd",
+        data: "oldPwd=" + oldPwd + "&newPwd=" + newPwd,
+        success: function (msg) {
+            alert(msg)
+        }   //操作成功后的操作！msg是后台传过来的值
+    });
+    $('#modifyPwd').modal('hide');
+    $("#newPwd").val("");
+    $("#oldPwd").val("");
+    $("#confirmPwd").val("");
+})
+
 
 function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -72,7 +180,24 @@ function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
     }
     return new Blob([u8arr], { type: mime });
 }
-
+/**  
+ * 将以base64的图片url数据转换为Blob  
+ * @param urlData  
+ *            用url方式表示的base64图片数据  
+ */  
+function convertBase64UrlToBlob(urlData){  
+      
+    var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
+      
+    //处理异常,将ascii码小于0的转换为大于0  
+    var ab = new ArrayBuffer(bytes.length);  
+    var ia = new Uint8Array(ab);  
+    for (var i = 0; i < bytes.length; i++) {  
+        ia[i] = bytes.charCodeAt(i);  
+    }  
+  
+    return new Blob( [ab] , {type : 'image/png'});  
+}  
 /**
  * 取到文件上传路径
  * @param file 上传的文件

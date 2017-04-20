@@ -20,8 +20,7 @@ namespace CGit.Src.Dao
         public User userHandler(SqlDataReader reader)
         {
             User user = new User();
-            string email = reader.GetString(0);
-            user.email = email;
+            user.email = reader.GetString(0);
             user.name = reader.GetString(1);
             user.pwd = reader.GetString(2);
             user.area = reader.GetString(3);
@@ -35,7 +34,7 @@ namespace CGit.Src.Dao
         public List<User> findAllUser()
         {
             String sql = "SELECT * from CGit.users";
-            return this.query(dataBase, sql, null, userHandler);
+            return query(dataBase, sql, null, userHandler);
         }
         /// <summary>
         /// 根据E-mail查找用户
@@ -57,6 +56,7 @@ namespace CGit.Src.Dao
                 return null;
             }
         }
+
         /// <summary>
         /// 判断是否存在email和pwd对应的用户
         /// </summary>
@@ -81,9 +81,30 @@ namespace CGit.Src.Dao
             }
 
         }
+        /// <summary>
+        /// 保存用户
+        /// </summary>
+        /// <param name="user">需要保存的用户</param>
+        /// <returns></returns>
         public int save(User user)
         {
             String sql = "INSERT INTO CGit.users (email, name, pwd, area, resume) VALUES(@email, @name, @pwd, @area, @resume)";
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@email", user.email));
+            sqlParameters.Add(new SqlParameter("@name", user.name));
+            sqlParameters.Add(new SqlParameter("@pwd", user.pwd));
+            sqlParameters.Add(new SqlParameter("@area", user.area));
+            sqlParameters.Add(new SqlParameter("@resume", user.resume));
+            return update(dataBase, sql, sqlParameters);
+        }
+        /// <summary>
+        /// 根据用户email更新用户信息
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
+        public int updateUser(User user)
+        {
+            String sql = "UPDATE CGit.users  SET name = @name ,pwd = @pwd ,area = @area ,resume = @resume where email = @email";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@email", user.email));
             sqlParameters.Add(new SqlParameter("@name", user.name));

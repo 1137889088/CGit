@@ -7,11 +7,9 @@ $(
             url: uri,
             type: 'HEAD',
             error: function () {
-                console.info("file not");
                 $img.attr("src", path + "default.png");
             },
             success: function () {
-                console.info("file exists");
             }
         });
     }

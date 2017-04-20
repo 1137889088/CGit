@@ -17,7 +17,7 @@
         <div class="col-md-10 column">
             <div class="col-md-4 column">
                 <a href="#" data-toggle="modal" data-target="#uploadImg">
-                    <img class="rounded" height="230" src="~/img/user/@(((CGit.Models.User)Session["loginUser"]).email).jpg" width="230">
+                    <img class="rounded" height="230" src="~/img/user/@(((CGit.Models.User)Session["loginUser"]).email).png" width="230">
                 </a>
                 <h1 class="vcard-names">
                     <span class="vcard-fullname d-block">@(((CGit.Models.User)Session["loginUser"]).name)</span>
@@ -110,7 +110,7 @@
         </div>
     </div>
 </div>
-<!-- 模态框（Modal） -->
+<!-- 修改密码模态框（Modal） -->
 <div class="modal fade" id="modifyPwd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -119,19 +119,19 @@
                 <h4 class="modal-title" id="myModalLabel">修改密码</h4>
             </div>
             <div class="modal-body" align="center">
-                <div class="margin">旧 密 码 ：<input type="password" placeholder="请输入旧密码...">
-                    <spam class="wrong-massage">密码错误</spam>
+                <div class="margin">旧 密 码 ：
+                    <input type="password" id="oldPwd" placeholder="请输入旧密码...">
                 </div>
-                <div class="margin">新 密 码 ：<input type="password" placeholder="请输入要修改的密码...">
-                    <spam class="wrong-massage">密码错误</spam>
+                <div class="margin">新 密 码 ：
+                     <input type="password" id = "newPwd" placeholder="请输入要修改的密码...">
                 </div>
-                <div class="margin">确认密码：<input type="password" placeholder="请输入确认密码...">
-                    <spam class="wrong-massage">密码错误</spam>
+                <div class="margin">确认密码：
+                       <input type="password" id = "confirmPwd" placeholder="请输入确认密码...">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
+                <button type="button" class="btn btn-primary" id="updatePwd">提交更改</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -146,22 +146,15 @@
                 <h4 class="modal-title">新建仓库</h4>
             </div>
             <div class="modal-body" align="center">
-                <div class="margin">仓库名：<input type="password" placeholder="请输入仓库名..."></div>
-                <div class="margin">仓库标题 ：<input type="password" placeholder="请输入仓库标题..."></div>
-                <div class="margin">语言 ：
-                    <select>
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
+                <div class="margin">仓库名：<input type="text" placeholder="请输入仓库名..."></div>
+                <div class="margin">描述 ：<input type="text" placeholder="请简要描述..."></div>
+                <div class="margin">语言 ：<input type="text" placeholder="请输入语言..."></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary">创建</button>
             </div>
-        </div><!-- /.modal-content -->
+        </div><!-- /.modal-content -->  
     </div><!-- /.modal -->
 </div>
 <!-- 上传头像模态框（Modal） -->
@@ -175,17 +168,16 @@
             </div>
             <div class="modal-body" align="center">
                 <div class="container" style="width: 80%">
-                    <img id ="imgPreview" src="/img/user/@(((CGit.Models.User)Session["loginUser"]).email).jpg" width="400" height="400"/>
+                 
+                    <img id ="imgPreview" src="/img/user/@(((CGit.Models.User)Session["loginUser"]).email).png" width="200" height="200"/>
                     <div>
                         <input type="file" id="imgSelect" value="选择头像" accept="image/*"/>
-
                     </div>
-                    <img id="previewyulan" src="" />
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary"  id="confirm">保存</button>
+                <button type="button" class="btn btn-primary"  id="upload">上传</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->

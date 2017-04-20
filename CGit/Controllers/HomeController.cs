@@ -11,18 +11,31 @@ namespace CGit.Controllers
     {
         public ActionResult Index()
         {
+            User user = (User)Session["loginUser"];
+            if (user != null)
+            {
+                return RedirectToAction("frame", "User");
+            }
             return View();
         }
 
         public ActionResult login()
         {
-
+            User user = (User)Session["loginUser"];
+            if (user != null)
+            {
+                return RedirectToAction("frame", "User");
+            }
             return View();
         }
 
         public ActionResult register()
         {
-
+            User user = (User)Session["loginUser"];
+            if (user != null)
+            {
+                return RedirectToAction("frame", "User");
+            }
             return View();
         }
 
@@ -32,6 +45,11 @@ namespace CGit.Controllers
         }
         public ActionResult doRegeist(User user)
         {
+            User user1 = (User)Session["loginUser"];
+            if (user1 != null)
+            {
+                return RedirectToAction("frame", "User");
+            }
             Src.Dao.UserDao dao = new Src.Dao.UserDao();
             if (dao.findUserByEmail(user.email) != null)
             {
@@ -55,19 +73,24 @@ namespace CGit.Controllers
         }
         public ActionResult doLogin()
         {
+            User user1 = (User)Session["loginUser"];
+            if (user1 != null)
+            {
+                return RedirectToAction("frame", "User");
+            }
             string email = Request["email"];
             string pwd = Request["pwd"];
             Src.Dao.UserDao dao = new Src.Dao.UserDao();
             User user = dao.login(email, pwd);
             if (user != null)
             {
-                user.pwd = "";
+                //user.pwd = "";
                 HttpContext.Session["loginUser"] = user;
                 return RedirectToAction("frame", "User");
             }
             else
             {
-                ViewData["msg"] = "登录失败用户名或密码错误";
+                ViewData["msg"] = "用户名或密码错误";
                 return View("login");
             }
         }
