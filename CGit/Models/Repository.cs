@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace CGit.Models
 {
-    class Repository
+    public class Repository
     {
-        public String id { get; set; }
+        public int id { get; set; }
         public String email { get; set; }
         public String name { get; set; }
         public String describe { get; set; }
         public String language { get; set; }
+
     }
 }

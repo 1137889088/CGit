@@ -20,7 +20,7 @@ namespace CGit.Src.Dao
         public Repository userHandler(SqlDataReader reader)
         {
             Repository repository = new Repository();
-            repository.id = reader.GetString(0);
+            repository.id = reader.GetInt32(0);
             repository.email = reader.GetString(1);
             repository.name = reader.GetString(2);
             repository.describe = reader.GetString(3);
@@ -55,6 +55,21 @@ namespace CGit.Src.Dao
             String sql = "delete from CGit.repository where repository_id= @id";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@id", id));
+            return update(dataBase, sql, sqlParameters);
+        }
+        /// <summary>
+        /// 保存用户
+        /// </summary>
+        /// <param name="repository">需要保存的仓库</param>
+        /// <returns></returns>
+        public int save(Repository repository)
+        {
+            String sql = "INSERT INTO CGit.repository (email, repository_name, repository_describe, repository_language) VALUES(@email, @name, @describe, @language)";
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@email", repository.email));
+            sqlParameters.Add(new SqlParameter("@name", repository.name));
+            sqlParameters.Add(new SqlParameter("@describe", repository.describe));
+            sqlParameters.Add(new SqlParameter("@language", repository.language));
             return update(dataBase, sql, sqlParameters);
         }
     }

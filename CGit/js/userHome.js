@@ -6,6 +6,7 @@
 * 判断头像是否存在
 *如果不存在就加载默认的头像
 */
+
 var path = "/img/user/";
 $(
     function () {
@@ -24,7 +25,8 @@ $(
             }
         });
     }
-);
+
+); 
 /**
  * 头像上传裁剪
  */
@@ -66,7 +68,8 @@ $("#imgSelect").change(function () {
             url: "/User/imgUpload",
             data: "imgData=" + dataurl,
             success: function (msg) {
-
+                alert(msg)
+                $(".rounded").attr("src", dataurl)
             }   //操作成功后的操作！msg是后台传过来的值
         });
     })
@@ -172,32 +175,15 @@ $("#updatePwd").click(function () {
 })
 
 
-function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
+/*function dataURLtoBlob(dataurl) {  //将base64格式图片转换为文件形式
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
     return new Blob([u8arr], { type: mime });
-}
-/**  
- * 将以base64的图片url数据转换为Blob  
- * @param urlData  
- *            用url方式表示的base64图片数据  
- */  
-function convertBase64UrlToBlob(urlData){  
-      
-    var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
-      
-    //处理异常,将ascii码小于0的转换为大于0  
-    var ab = new ArrayBuffer(bytes.length);  
-    var ia = new Uint8Array(ab);  
-    for (var i = 0; i < bytes.length; i++) {  
-        ia[i] = bytes.charCodeAt(i);  
-    }  
-  
-    return new Blob( [ab] , {type : 'image/png'});  
-}  
+}*/
+
 /**
  * 取到文件上传路径
  * @param file 上传的文件

@@ -32,7 +32,7 @@ namespace CGit.Controllers
         public ActionResult register()
         {
             User user = (User)Session["loginUser"];
-            if (user != null)
+            if (user != null)//用户已经登录
             {
                 return RedirectToAction("frame", "User");
             }
@@ -43,6 +43,7 @@ namespace CGit.Controllers
         {
             return View();
         }
+
         public ActionResult doRegeist(User user)
         {
             User user1 = (User)Session["loginUser"];
@@ -82,7 +83,7 @@ namespace CGit.Controllers
             string pwd = Request["pwd"];
             Src.Dao.UserDao dao = new Src.Dao.UserDao();
             User user = dao.login(email, pwd);
-            if (user != null)
+            if (user != null)//用户存在登录成功
             {
                 //user.pwd = "";
                 HttpContext.Session["loginUser"] = user;
@@ -100,7 +101,7 @@ namespace CGit.Controllers
             Src.Dao.UserDao dao = new Src.Dao.UserDao();
             string email = Request["eamil"];
             User user = dao.findUserByEmail(email);
-            if (user == null)
+            if (user == null)//邮箱没有被注册
             {
                 ViewData["msg"] = "该邮箱未注册,请重新输入";
             }

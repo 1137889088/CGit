@@ -53,55 +53,19 @@
                         </button>
                     </div>
                     <hr/>
+                    <!--遍历list-->
+                    @foreach (var repository in ViewBag.repositoryList)
+                    {
+                        <div class="repositories">
+                            <div><a class="text-bold" href="~/Project/projectFiles?id=@repository.id">@repository.name</a></div>
+                            <div class="smaill-text"><span>@repository.describe</span></div>
+                            <div>
+                                <span class="repo-language-color" style="background-color:#563d7c;"></span>@repository.language
+                                <a class="float-right" href="#">删除仓库</a>
+                            </div>
+                        </div>
+                    }
 
-                    <div class="repositories">
-                        <div><a class="text-bold" href="~/Project/projectFiles">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
-                    <div class="repositories">
-                        <div><a class="text-bold" href="projectFiles.html">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
-                    <div class="repositories">
-                        <div><a class="text-bold" href="projectFiles.html">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
-                    <div class="repositories">
-                        <div><a class="text-bold" href="projectFiles.html">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
-                    <div class="repositories">
-                        <div><a class="text-bold" href="projectFiles.html">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
-                    <div class="repositories">
-                        <div><a class="text-bold" href="projectFiles.html">我的项目</a></div>
-                        <div class="smaill-text"><span>afasdfasdfasdfasdfasdfasdasdfasdf</span></div>
-                        <div>
-                            <span class="repo-language-color" style="background-color:#563d7c;"></span>Java
-                            <a class="float-right" href="#">删除仓库</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -145,15 +109,17 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">新建仓库</h4>
             </div>
-            <div class="modal-body" align="center">
-                <div class="margin">仓库名：<input type="text" placeholder="请输入仓库名..."></div>
-                <div class="margin">描述 ：<input type="text" placeholder="请简要描述..."></div>
-                <div class="margin">语言 ：<input type="text" placeholder="请输入语言..."></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">创建</button>
-            </div>
+            <form action="~/User/addRepository" method="post">
+                <div class="modal-body" align="center">
+                    <div class="margin">仓库名：<input type="text" name="repository.name" placeholder="请输入仓库名..."></div>
+                    <div class="margin">描述 ：<input type="text" name="repository.describe" placeholder="请简要描述..."></div>
+                    <div class="margin">语言 ：<input type="text" name="repository.language" placeholder="请输入语言..."></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">创建</button>
+                </div>
+            </form>
         </div><!-- /.modal-content -->  
     </div><!-- /.modal -->
 </div>
