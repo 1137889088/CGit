@@ -7,18 +7,18 @@
 *如果不存在就加载默认的头像
 */
 
-var path = "/img/user/";
+var defaultImgPath = "/img/user/default.png";
 $(
     function () {
         var $img = $("#imgPreview");
         var uri = $img.attr("src");
-        $.ajax({
+        $.ajax({//用ajax请求文件判断是否存在
             url: uri,
             type: 'HEAD',
             error: function () {
-
-                $img.attr("src", path + "default.png");
-                $(".rounded").attr("src", path + "default.png")
+                //如果不存在
+                $img.attr("src", defaultImgPath);
+                $(".rounded").attr("src", defaultImgPath)
             },
             success: function () {
 
@@ -34,14 +34,16 @@ $("#imgSelect").change(function () {
     var file = this.files[0];
     var $img = $("#imgPreview");
     var windowURL = window.URL || window.webkitURL;
-    if (!(/^image\/\w+/.test(file.type))) {
+    if (!(/^image\/\w+/.test(file.type))) {//判断是否是图片
         window.alert('请选择图片');
         return;
     }
+    //将图片加入预览
     var imgUrl = windowURL.createObjectURL(file);
     if (imgUrl) {
         $img.attr("src", imgUrl);
     }
+    //初始化裁剪
     $img.cropper({
         aspectRatio: 1 / 1,
         guides: false,
@@ -57,12 +59,12 @@ $("#imgSelect").change(function () {
              $("#preview").attr("src", dataurl)*/
         }
     });
+    //替换裁剪
     $img.cropper('replace', imgUrl)
-
+    //上传图片
     $("#upload").click(function () {
         var $imgData = $img.cropper('getCroppedCanvas')
         var dataurl = $imgData.toDataURL('image/png');  //dataurl便是base64图片
-
         $.ajax({
             type: "post",
             url: "/User/imgUpload",
@@ -126,7 +128,7 @@ $("#oldPwd").focus(function () {
 $("#oldPwd").blur(function () {
     var newPwd = $("#newPwd").val();
     var confirmPwd = $("#confirmPwd").val();
-    if (newPwd != confirmPwd) {
+    if (newPwd != confirmPwd) {//密码不一致
         $('#confirmPwd').popover("show");
         checksame = false;
     } else {
@@ -136,7 +138,7 @@ $("#oldPwd").blur(function () {
 $("#confirmPwd").blur(function () {
     var newPwd = $("#newPwd").val();
     var confirmPwd = $("#confirmPwd").val();
-    if (newPwd != confirmPwd) {
+    if (newPwd != confirmPwd) {//密码不一致
         $('#confirmPwd').popover("show");
         checksame = false;
     } else {
@@ -160,6 +162,7 @@ $("#updatePwd").click(function () {
     }
     var newPwd = $("#newPwd").val();
     var oldPwd = $("#oldPwd").val();
+    //修改密码上传
     $.ajax({
         type: "post",
         url: "/User/modifyPwd",
@@ -168,6 +171,7 @@ $("#updatePwd").click(function () {
             alert(msg)
         }   //操作成功后的操作！msg是后台传过来的值
     });
+    //清空填充
     $('#modifyPwd').modal('hide');
     $("#newPwd").val("");
     $("#oldPwd").val("");

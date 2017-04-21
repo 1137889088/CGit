@@ -27,24 +27,34 @@ namespace CGit.Src.Dao
             repository.language = reader.GetString(4);
             return repository;
         }
+
         /// <summary>
         /// 查询所有仓库
         /// </summary>
-        /// <returns>根据email查找所有仓库，如果未找到Count为0</returns>
+        /// <returns>根据email查找所有仓库，如果未找到返回null</returns>
         public List<Repository> findAllRepositoryByEmail(string email)
         {
             String sql = "SELECT * from CGit.repository where email= @email";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@email", email));
             List<Repository> list = query(dataBase, sql, sqlParameters, userHandler);
-            if (list.Count > 0)
+            return list;
+        }
+        /// <summary>
+        /// 根据id查找仓库
+        /// </summary>
+        /// <returns>如果</returns>
+        public Repository findRepositoryById(string id)
+        {
+            String sql = "SELECT * from CGit.repository where repository_id= @id";
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@id", id));
+            List<Repository> list = query(dataBase, sql, sqlParameters, userHandler);
+            if (list!=null)
             {
-                return list;
+                return list[0];
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
         /// <summary>
         /// 根据id删除仓库

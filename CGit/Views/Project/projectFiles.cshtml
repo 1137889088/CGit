@@ -7,206 +7,266 @@
     <link rel="stylesheet" href="~/css/projectFiles.css">
 </head>
 <body>
-<div class="row clearfix">
-    <!--左边空位-->
-    <div class="col-md-2 column">
-    </div>
-    <div class="col-md-8 column">
-        <div style="color: #0e90d2;font-size: 18px;margin-bottom: 20px;margin-top: 50px">
-            <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 12 16" width="12">
-                <path fill-rule="evenodd"
-                      d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"></path>
-            </svg>
-            <a href="#">1137889088</a><span style="color: #0e0e0e;margin:0 4px 0 4px">/</span><a href="#">C0Compiler</a>
-            <button type="button" style="float: right;height: 30px" class="btn btn-default">
-                <span class="glyphicon glyphicon-star"></span>
-                <span>关注</span>
-            </button>
+
+    @{
+        //判断是否是当前用户
+        bool isCurrentUser = ((CGit.Models.User)ViewData["user"]).email.Equals(((CGit.Models.User)Session["loginUser"]).email);
+    }
+    <div class="row clearfix">
+        <!--左边空位-->
+        <div class="col-md-2 column">
         </div>
-        <hr/>
-        <div>
-            <span style="font-size: 24px">教材管理系统</span>
-            <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
-                <span class="glyphicon glyphicon-trash icon"></span>删除仓库
-            </button>
-            <button type="button" data-toggle="modal" data-target="#modifyTitle" style="float: right; margin-right: 8px" class="btn btn-default ">
-                <span class="glyphicon glyphicon-edit icon"></span>修改标题
-            </button>
-            <button class="btn btn-default" style="float: right;margin-right: 8px">
-                <a href="~/Project/projectComment" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
-            </button>
-        </div>
-        <hr/>
-        <div>
-            <div class="btn-group">
-                <button class="btn btn-default">提交版本</button>
-                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="#">版本一</a>
-                    </li>
-                    <li class="disabled">
-                        <a href="#">当前版本</a>
-                    </li>
-                    <li class="divider">
-                    </li>
-                    <li>
-                        <a href="#">版本一</a>
-                    </li>
-                </ul>
+        <!--中部内容开始-->
+        <div class="col-md-8 column">
+            <!--顶部项目用户和项目名开始-->
+            <div style="color: #0e90d2;font-size: 18px;margin-bottom: 20px;margin-top: 50px">
+                <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 12 16" width="12">
+                    <path fill-rule="evenodd"
+                          d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0
+                          .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1
+                          1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z">
+                    </path>
+                </svg>
+                <a href="~/User/userHome?email=@(((CGit.Models.User)ViewData["user"]).email)">@(((CGit.Models.User)ViewData["user"]).email)</a>
+                <span style="color: #0e0e0e;margin:0 4px 0 4px">/</span>
+                <a href="~/Project/projectFiles?id=@(((CGit.Models.Repository)ViewData["repository"]).id)">
+                    @(((CGit.Models.Repository)ViewData["repository"]).name)
+                </a>
+
+                @if (isCurrentUser)
+                {
+                    <button type="button" style="float: right;height: 30px" class="btn btn-default">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span>关注</span>
+                    </button>
+                }
+                else
+                {
+                    <button type="button" disabled style="float: right;height: 30px" class="btn btn-default">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span>关注</span>
+                    </button>
+                }
             </div>
-            <span style="margin: 5px 0px 0 25px; top: 5px">
+            <!--顶部项目用户和项目名结束-->
+            <hr />
+            <!--项目标题栏开始-->
+            <div>
+                <span style="font-size: 24px">@(((CGit.Models.Repository)ViewData["repository"]).name)</span>
+                @if (isCurrentUser)
+                {
+                    <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash icon"></span>删除仓库
+                    </button>
+                    <button type="button" data-toggle="modal" data-target="#modifyTitle" style="float: right; margin-right: 8px" class="btn btn-default">
+                        <span class="glyphicon glyphicon-edit icon"></span>修改标题
+                    </button>
+                }
+                <button class="btn btn-default" style="float: right;margin-right: 8px">
+                    <a href="~/Project/projectComment" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
+                </button>
+            </div>
+            <!--项目标题栏结束-->
+            <hr />
+            <!--版本栏开始-->
+            <div>
+                <!--版本按钮组开始-->
+                <div class="btn-group">
+                    <button class="btn btn-default">提交版本</button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="height:200px;overflow:scroll">
+                        <li>
+                            <a href="#">版本一</a>
+                        </li>
+                        <li class="disabled">
+                            <a href="#">当前版本</a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="#">版本一</a>
+                        </li>
+                        <li>
+                            <a href="#">版本一</a>
+                        </li>
+                        <li>
+                            <a href="#">当前版本</a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="#">版本一</a>
+                        </li>
+                    </ul>   
+                </div>
+                <!--版本按钮组结束-->
+                <!--路径栏开始-->
+                <span style="margin: 5px 0px 0 25px; top: 5px">
                     <a href="#">Home</a>/
                     <a href="#">Library</a>/
                     Data
-            </span>
-            <button class="btn btn-default"data-toggle="modal" data-target="#newVerson" style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-plus icon"></span>新建版本</a>
-            </button>
-            <button class="btn btn-default" data-toggle="modal" data-target="#newFile"style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-file icon"></span>新建文件</a>
-            </button>
-            <button class="btn btn-default" data-toggle="modal" data-target="#newFolder"style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-file icon"></span>新建文件夹</a>
-            </button>
-            <button class="btn btn-default"data-toggle="modal" data-target="#uploadFile" style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-upload icon"></span>上传文件</a>
-            </button>
-            <button class="btn btn-default" style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
-            </button>
+                </span>
+                <!--路径栏结束-->
+                @if (isCurrentUser)
+                {
+                    <button class="btn btn-default" data-toggle="modal" data-target="#newVerson" style="float: right">
+                        <a href="#"><span class="glyphicon glyphicon-plus icon"></span>新建版本</a>
+                    </button>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#newFile" style="float: right">
+                        <a href="#"><span class="glyphicon glyphicon-file icon"></span>新建文件</a>
+                    </button>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#newFolder" style="float: right">
+                        <a href="#"><span class="glyphicon glyphicon-file icon"></span>新建文件夹</a>
+                    </button>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#uploadFile" style="float: right">
+                        <a href="#"><span class="glyphicon glyphicon-upload icon"></span>上传文件</a>
+                    </button>
+                }
+                <button class="btn btn-default" style="float: right">
+                    <a href="#"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
+                </button>
+            </div>
+            <!--版本栏结束-->
+            <div class="commit-tease">
+                <img height="20" src="~/img/user/@(((CGit.Models.User)ViewData["user"]).email).png" width="20">
+                <a href="#" style="margin-top: 2px">@(((CGit.Models.User)ViewData["user"]).name)</a>
+                <span style="float: right">提交时间：26 Jul 2016</span>
+            </div>
+            <!--文件信息栏开始-->
+            <div>
+                <div class="fileLine">
+                    <a href="#" class="return"><strong>..</strong></a>
+                </div>
+                <div class="fileLine">
+                    <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
+                    <a href="~/Project/projectFileContent" class="filename">compiler</a>
+                </div>
+                <div class="fileLine">
+                    <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
+                    <a href="#" class="filename">compile</a>
+                </div>
+                <div class="fileLine">
+                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
+                    <a href="#" class="filename">compiler.xml</a>
+                </div>
+                <div class="fileLine">
+                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
+                    <a href="#" class="filename">compiler.xml</a>
+                </div>
+                <div class="fileLine">
+                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
+                    <a href="#" class="filename">compiler.xml</a>
+                </div>
+            </div>
+            <!--文件信息栏结束-->
         </div>
-        <div class="commit-tease">
-            <img alt="1137889088" height="20" src="~/img/19888480.jpg" width="20">
-            <a href="#" style="margin-top: 2px">1137889088</a>
-            <span style="float: right">提交时间：26 Jul 2016</span>
-        </div>
-        <!-- -->
-        <div>
-            <div class="fileLine">
-                <a href="#" class="return"><strong>..</strong></a>
-            </div>
-            <div class="fileLine">
-                <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
-                <a href="~/Project/projectFileContent" class="filename">compiler</a>
-            </div>
-            <div class="fileLine">
-                <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
-                <a href="#" class="filename">compile</a>
-            </div>
-            <div class="fileLine">
-                <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                <a href="#" class="filename">compiler.xml</a>
-            </div>
-            <div class="fileLine">
-                <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                <a href="#" class="filename">compiler.xml</a>
-            </div>
-            <div class="fileLine">
-                <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                <a href="#" class="filename">compiler.xml</a>
-            </div>
+        <!--右边空位-->
+        <div class="col-md-2 column">
         </div>
     </div>
-    <div class="col-md-2 column">
-    </div>
-</div>
-<!-- 新版本模态框（Modal） -->
-<div class="modal fade" id="newVerson" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="createNewVerson">新建版本</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div>版本：<input type="text" placeholder="请输入版本标识..."></div>
-                <div class="margin"><input id="dialog" type="file" webkitdirectory /></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">新建</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<!-- 新文件夹模态框（Modal） -->
-<div class="modal fade" id="newFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">新建文件夹</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div>文件夹：<input type="text" placeholder="请输入文件夹名..."></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">新建</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<!-- 修改标题模态框（Modal） -->
-<div class="modal fade" id="modifyTitle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">修改标题</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div class="margin">新标题：<input type="password"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<!-- 新建文件模态框（Modal） -->
-<div class="modal fade" id="newFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">新建文件</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div class="margin">文件名 ：<input type="text"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<!-- 上传文件模态框（Modal） -->
-<div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="fileupLoad">上传文件</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div class="margin"><input type="file"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">上传</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
+
+
+    @if (isCurrentUser)
+    {
+    <!--以下都是模态框-->
+    <!-- 新版本模态框（Modal） -->
+        <div class="modal fade" id="newVerson" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="createNewVerson">新建版本</h4>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div>版本：<input type="text" placeholder="请输入版本标识..."></div>
+                        <div class="margin"><input id="dialog" type="file" webkitdirectory /></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">新建</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    <!-- 新文件夹模态框（Modal） -->
+        <div class="modal fade" id="newFolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">新建文件夹</h4>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div>文件夹：<input type="text" placeholder="请输入文件夹名..."></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">新建</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    <!-- 修改标题模态框（Modal） -->
+        <div class="modal fade" id="modifyTitle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改标题</h4>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="margin">新标题：<input type="password"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">提交更改</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    <!-- 新建文件模态框（Modal） -->
+        <div class="modal fade" id="newFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">新建文件</h4>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="margin">文件名 ：<input type="text"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">提交更改</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    <!-- 上传文件模态框（Modal） -->
+        <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="fileupLoad">上传文件</h4>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="margin"><input type="file"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">上传</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    }
     <script src="~/js/jquery-3.1.1.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script>
-        createNewVerson.onchange = function(e) {
+        createNewVerson.onchange = function (e) {
             var files = this.files;
             var table = {};
 

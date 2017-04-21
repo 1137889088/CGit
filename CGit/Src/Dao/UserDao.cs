@@ -30,7 +30,7 @@ namespace CGit.Src.Dao
         /// <summary>
         /// 查询所有用户
         /// </summary>
-        /// <returns>封装了所有用户的list，如果未找到Count为0</returns>
+        /// <returns>封装了所有用户的list，如果未找到返回null</returns>
         public List<User> findAllUser()
         {
             String sql = "SELECT * from CGit.users";
@@ -48,7 +48,7 @@ namespace CGit.Src.Dao
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@email", email));
             List<User> list = query(dataBase, sql, sqlParameters, userHandler);
-            if (list.Count>0){
+            if (list!=null){
                 return list[0];
             }
             else
@@ -71,7 +71,7 @@ namespace CGit.Src.Dao
             sqlParameters.Add(new SqlParameter("@email", email));
             sqlParameters.Add(new SqlParameter("@pwd", pwd));
             List<User> list = query(dataBase, sql, sqlParameters, userHandler);
-            if (list.Count > 0)
+            if (list!=null)
             {
                 return list[0];
             }

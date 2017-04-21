@@ -13,6 +13,7 @@ namespace CGit.Dao
     public class BaseDao<T>
     {
         public delegate T queryDelegate(SqlDataReader reader);
+    
         /// <summary>
         /// 对数据库进行更新操作
         /// </summary>
@@ -75,7 +76,7 @@ namespace CGit.Dao
         /// <param name="method">
         ///     将查询的数据封装成实体类的方法
         /// </param>
-        /// <returns>封装好的List</returns>
+        /// <returns>封装好的List，如果没有查询到返回null</returns>
         public List<T> query(String dataBase, String sql, List<SqlParameter> sqlParameters,queryDelegate handler)
         {
             List<T> result = new List<T>();
@@ -115,7 +116,14 @@ namespace CGit.Dao
                 sqlTransaction.Dispose();
                 conn.Dispose();
             }
-            return result;
+            if(result.Count > 0)
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

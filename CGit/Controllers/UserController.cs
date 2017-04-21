@@ -10,36 +10,63 @@ namespace CGit.Controllers
 {
     public class UserController : Controller
     {
-
         Src.Dao.UserDao userDao = new Src.Dao.UserDao();
         RepositoryDao repositoryDao = new RepositoryDao();
+        /// <summary>
+        /// 加载主页面框架
+        /// </summary>
+        /// <returns></returns>
         public ActionResult frame()
         {
             return View();
         }
-
+        /// <summary>
+        /// 转到用户主页
+        /// </summary>
+        /// <returns></returns>
         public ActionResult userHome()
         {
-            string email = Request["email"];
-            if (email == null || email.Equals(""))
+            string email = Request["email"];//获取显示的用户email的主页
+            User user = null;
+            if (email == null || email.Equals(""))//如果email为空证明是当前登录的用户
             {
-                User user = (User)Session["loginUser"];
+                user = (User)Session["loginUser"];
                 email = user.email;
             }
-            List<Repository> repositoryList = repositoryDao.findAllRepositoryByEmail(email);
-            ViewData["repositoryList"] = repositoryList;
+            else//如果email不为空就查找这个用户
+            {
+                user = userDao.findUserByEmail(email);
+            }
+            if (user == null)//防止不存在该email的用户
+            {
+                user = (User)Session["loginUser"];
+            }
+            if (user == null)
+            {
+                return RedirectToAction("login", "Home");//如果还不存在就跳转到登录页面
+            }
+
+            List<Repository> repositoryList = repositoryDao.findAllRepositoryByEmail(email);//查找所有仓库
+            ViewData["repositoryList"] = repositoryList;//将仓库数据放入viewData
+            ViewData["user"] = user;//将用户信息放入viewData
             return View("userHome");
         }
-
+        /// <summary>
+        /// 我的关注
+        /// </summary>
+        /// <returns></returns>
         public ActionResult myFollow()
         {
             return View();
         }
-
+        /// <summary>
+        /// 登出
+        /// </summary>
+        /// <returns></returns>
         public ActionResult singOut()
         {
             Session.Remove("loginUser");
-            return RedirectToAction("login","Home");
+            return RedirectToAction("login", "Home");
         }
         /// <summary>
         /// 热门项目视图
@@ -57,10 +84,10 @@ namespace CGit.Controllers
         {
             string oldPwd = Request["oldPwd"];
             User user = (User)Session["loginUser"];
-            if (user.pwd.Equals(oldPwd)){//密码检测
+            if (user.pwd.Equals(oldPwd))
+            {//密码检测
                 return Content("ture");
             }
-
             return Content("false"); ;
         }
         /// <summary>
@@ -87,23 +114,40 @@ namespace CGit.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult imgUpload()
-        { 
+        {
             User user = (User)Session["loginUser"];
             string email = user.email;
             string imgData = Request["imgData"];
             imgData = imgData.Replace(' ', '+');//解决base64中'+' 被空格取代的问题
             string strPath = Server.MapPath("/");//取得项目路径
             Src.Util.ImgUtil.Base64StringToImage(imgData, strPath + "/img/user/" + email, Src.Util.ImgUtil.TYPE_PNG);
-           // Src.Util.ImgUtil.saveImg(strPath+"/img/user/" + email+".png", imgData);
-            return Content("头像上传成功"); 
+            // Src.Util.ImgUtil.saveImg(strPath+"/img/user/" + email+".png", imgData);
+            return Content("头像上传成功");
         }
-       
+        /// <summary>
+        /// 添加仓库
+        /// </summary>
+        /// <param name="repository">仓库</param>
+        /// <returns></returns>
         public ActionResult addRepository(Repository repository)
         {
-            if (repository != null)
+            if (repository != null)//如果传来的仓库为空
             {
                 repository.email = ((User)Session["loginUser"]).email;
                 repositoryDao.save(repository);
+            }
+            return userHome();
+        }
+        /// <summary>
+        /// 删除仓库
+        /// </summary>
+        /// <param name="id">仓库id</param>
+        /// <returns></returns>
+        public ActionResult deleteRepository(string id)
+        {
+            if (id != null)//如果传来删除的用户id为空
+            {
+                repositoryDao.deleteRepositoryById(id);
             }
             return userHome();
         }
