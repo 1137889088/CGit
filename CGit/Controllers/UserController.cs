@@ -1,4 +1,5 @@
 ﻿using CGit.Models;
+using CGit.Src.Constant;
 using CGit.Src.Dao;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace CGit.Controllers
     {
         Src.Dao.UserDao userDao = new Src.Dao.UserDao();
         RepositoryDao repositoryDao = new RepositoryDao();
+     
         /// <summary>
         /// 加载主页面框架
         /// </summary>
@@ -119,8 +121,9 @@ namespace CGit.Controllers
             string email = user.email;
             string imgData = Request["imgData"];
             imgData = imgData.Replace(' ', '+');//解决base64中'+' 被空格取代的问题
-            string strPath = Server.MapPath("/");//取得项目路径
-            Src.Util.ImgUtil.Base64StringToImage(imgData, strPath + "/img/user/" + email, Src.Util.ImgUtil.TYPE_PNG);
+            string projectPath = Server.MapPath("/");//取得项目路径
+            string headImgPath = ConfigConstant.headImgPath;//获取图片位置
+            Src.Util.ImgUtil.Base64StringToImage(imgData, projectPath + headImgPath + email, Src.Util.ImgUtil.TYPE_PNG);
             // Src.Util.ImgUtil.saveImg(strPath+"/img/user/" + email+".png", imgData);
             return Content("头像上传成功");
         }
@@ -134,6 +137,8 @@ namespace CGit.Controllers
             if (repository != null)//如果传来的仓库为空
             {
                 repository.email = ((User)Session["loginUser"]).email;
+                string projectPath = Server.MapPath("/");//取得项目路径
+                string repositoryPath = ConfigConstant.repositoryPath;//获取图片位置
                 repositoryDao.save(repository);
             }
             return userHome();

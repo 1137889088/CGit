@@ -153,6 +153,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Src\Constant\ConfigConstant.cs" />
     <Compile Include="Src\Dao\BaseDao.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -162,7 +163,9 @@
     <Compile Include="Src\Dao\UserDao.cs" />
     <Compile Include="Src\Util\DBUtil.cs" />
     <Compile Include="Src\Util\EmailUtil.cs" />
+    <Compile Include="Src\Util\AsynFileUtil.cs" />
     <Compile Include="Src\Util\ImgUtil.cs" />
+    <Compile Include="Src\Util\SingletonManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -206,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="repository\myFrist\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

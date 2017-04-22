@@ -33,6 +33,7 @@ namespace CGit.Controllers
                 user.pwd = "";
                 ViewData["user"] = user;
                 ViewData["repository"] = repository;
+     
             }
             else
             {
