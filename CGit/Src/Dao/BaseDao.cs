@@ -56,6 +56,51 @@ namespace CGit.Dao
             }
             return colum;
         }
+
+
+
+        /// <summary>
+        /// 对数据库进行更新操作
+        /// </summary>
+        /// <param name="sql">更新的SQL语句</param>
+        /// <param name="dataBase">要更新的数据库</param>
+        /// <param name="sqlParameters">传入的参数</param>
+        /// <returns>插入的主键</returns>
+        public int saveAndReturnID(String dataBase, String sql, List<SqlParameter> sqlParameters)
+        {
+            int colum = 0;
+            SqlConnection conn = DBUtil.getConn();
+            conn.Open();
+            conn.ChangeDatabase(dataBase);
+            SqlTransaction sqlTransaction = conn.BeginTransaction();
+            try
+            {
+                SqlCommand command = conn.CreateCommand();
+                command.CommandText = sql;
+                command.Transaction = sqlTransaction;
+                if (sqlParameters != null)
+                {
+                    foreach (SqlParameter parameter in sqlParameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                colum = int.Parse(command.ExecuteScalar().ToString());
+                sqlTransaction.Commit();    
+            }
+            catch (Exception e)
+            {
+                sqlTransaction.Rollback();
+                throw new Exception(e.ToString());
+            }
+            finally
+            {
+                conn.Close();
+                sqlTransaction.Dispose();
+                conn.Dispose();
+            }
+            return colum;
+        }
         /// <summary>
         /// 对数据库进行查询操作
         /// 这里使用了委托

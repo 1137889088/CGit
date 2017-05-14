@@ -163,9 +163,10 @@
     <Compile Include="Src\Dao\UserDao.cs" />
     <Compile Include="Src\Util\DBUtil.cs" />
     <Compile Include="Src\Util\EmailUtil.cs" />
-    <Compile Include="Src\Util\AsynFileUtil.cs" />
+    <Compile Include="Src\Util\FileUtil.cs" />
+    <Compile Include="Src\Util\SyncFileUtil.cs" />
     <Compile Include="Src\Util\ImgUtil.cs" />
-    <Compile Include="Src\Util\SingletonManager.cs" />
+    <Compile Include="Src\Util\SingletonSyncFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

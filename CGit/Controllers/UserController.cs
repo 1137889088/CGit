@@ -1,6 +1,7 @@
 ﻿using CGit.Models;
 using CGit.Src.Constant;
 using CGit.Src.Dao;
+using CGit.Src.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace CGit.Controllers
         }
         /// <summary>
         /// 我的关注
-        /// </summary>
+        /// </summary>n m
         /// <returns></returns>
         public ActionResult myFollow()
         {
@@ -137,9 +138,12 @@ namespace CGit.Controllers
             if (repository != null)//如果传来的仓库为空
             {
                 repository.email = ((User)Session["loginUser"]).email;
+                int id = repositoryDao.saveAndReturnId(repository);
                 string projectPath = Server.MapPath("/");//取得项目路径
-                string repositoryPath = ConfigConstant.repositoryPath;//获取图片位置
-                repositoryDao.save(repository);
+                string repositoryPath = ConfigConstant.repositoryPath;//获取仓库路径
+                string path = projectPath + repositoryPath +"/"+ id;
+                SingletonSyncFileManager.getInstance(path).createDictionary();
+                SingletonSyncFileManager.removeOneOperator(path);
             }
             return userHome();
         }
@@ -152,6 +156,11 @@ namespace CGit.Controllers
         {
             if (id != null)//如果传来删除的用户id为空
             {
+                string projectPath = Server.MapPath("/");//取得项目路径
+                string repositoryPath = ConfigConstant.repositoryPath;//获取仓库路径
+                string path = projectPath + repositoryPath + "/" + id;
+                SingletonSyncFileManager.getInstance(path).createDictionary();
+                SingletonSyncFileManager.removeOneOperator(path);
                 repositoryDao.deleteRepositoryById(id);
             }
             return userHome();
