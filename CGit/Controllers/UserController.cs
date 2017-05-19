@@ -2,10 +2,7 @@
 using CGit.Src.Constant;
 using CGit.Src.Dao;
 using CGit.Src.Util;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CGit.Controllers
@@ -138,10 +135,10 @@ namespace CGit.Controllers
             if (repository != null)//如果传来的仓库为空
             {
                 repository.email = ((User)Session["loginUser"]).email;
-                int id = repositoryDao.saveAndReturnId(repository);
+                int id = repositoryDao.saveAndReturnId(repository);//*******存在危险
                 string projectPath = Server.MapPath("/");//取得项目路径
                 string repositoryPath = ConfigConstant.repositoryPath;//获取仓库路径
-                string path = projectPath + repositoryPath +"/"+ id;
+                string path = projectPath + repositoryPath + id;
                 SingletonSyncFileManager.getInstance(path).createDictionary();
                 SingletonSyncFileManager.removeOneOperator(path);
             }
@@ -158,8 +155,8 @@ namespace CGit.Controllers
             {
                 string projectPath = Server.MapPath("/");//取得项目路径
                 string repositoryPath = ConfigConstant.repositoryPath;//获取仓库路径
-                string path = projectPath + repositoryPath + "/" + id;
-                SingletonSyncFileManager.getInstance(path).createDictionary();
+                string path = projectPath + repositoryPath + id;
+                SingletonSyncFileManager.getInstance(path).delete();
                 SingletonSyncFileManager.removeOneOperator(path);
                 repositoryDao.deleteRepositoryById(id);
             }

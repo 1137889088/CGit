@@ -11,7 +11,7 @@ namespace CGit.Src.Util
 
     public class SyncFileUtil
     {
-        private ReaderWriterLockSlim rwl = new ReaderWriterLockSlim();
+        private ReaderWriterLock rwl = new ReaderWriterLock();
         private string path;
         private int count;
 
@@ -24,6 +24,7 @@ namespace CGit.Src.Util
             this.path = path;
             count = 0;
         }
+
         /// <summary>
         /// 原子操作的操作员增加
         /// </summary>
@@ -60,35 +61,44 @@ namespace CGit.Src.Util
         /// <returns>是否创建成功</returns>
         public bool createDictionary()
         {
-            if (rwl.TryEnterWriteLock(3000))//尝试获取写锁
-            {
-                if (Directory.Exists(path))
-                {
-                    return false;
-                }
-                // Try to create the directory.
-                DirectoryInfo di = Directory.CreateDirectory(path);
-                return true;
-            }
-            return false;
-        }
 
+            rwl.AcquireWriterLock(3000);//尝试获取写锁
+            if (Directory.Exists(path))
+            {
+                return false;
+            }
+            // Try to create the directory.
+            DirectoryInfo di = Directory.CreateDirectory(path);
+            rwl.ReleaseWriterLock();
+            return true;
+        }
+      
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <returns>删除是否成功</returns>
+        public bool delete()
+        {
+            rwl.AcquireWriterLock(3000);//尝试获取写锁
+            DirectoryInfo di = new DirectoryInfo(path);
+            di.Delete(true);
+            rwl.ReleaseWriterLock();
+            return true;
+        }
         /// <summary>
         /// 创建文件
         /// </summary>
         /// <returns>是否创建成功</returns>
         public bool createFile()
         {
-            if (rwl.TryEnterWriteLock(3000))//尝试获取写锁
+            rwl.AcquireWriterLock(3000);//尝试获取写锁
+            if (File.Exists(path))//判断文件是否存在
             {
-                if (File.Exists(path))//判断文件是否存在
-                {
-                    return false;
-                }
-                System.IO.File.Create(path);
-                return true;
+                return false;
             }
-            return false;
+            System.IO.File.Create(path);
+            rwl.ReleaseWriterLock();
+            return true;
         }
        
         /// <summary>
@@ -101,28 +111,26 @@ namespace CGit.Src.Util
         /// <returns>是否写入文件成功</returns>
         public bool createFileAndWrite(string content)
         {
-            if (rwl.TryEnterWriteLock(3000))//尝试获取写锁
+            rwl.AcquireWriterLock(3000);//尝试获取写锁
+            bool isSuccess = false;
+            try
             {
-                bool isSuccess = false;
-                try
-                {
-                    FileStream fs = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.Write); //可以指定盘符，也可以指定任意文件名，还可以为word等文件
-                    StreamWriter sw = new StreamWriter(fs); // 创建写入流
-                    sw.WriteLine(@content); // 写入
-                    sw.Close(); //关闭文件
-                    isSuccess = true;
-                }
-                catch
-                {
-                    isSuccess = false;
-                }
-                finally
-                {
-                    rwl.ExitWriteLock();//释放写锁
-                }
-                return isSuccess;
-            }   
-            return false;
+                FileStream fs = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.Write); //可以指定盘符，也可以指定任意文件名，还可以为word等文件
+                StreamWriter sw = new StreamWriter(fs); // 创建写入流
+                sw.WriteLine(@content); // 写入
+                sw.Close(); //关闭文件
+                isSuccess = true;
+            }
+            catch
+            {
+                isSuccess = false;
+            }
+            finally
+            {
+                rwl.ReleaseWriterLock();//释放写锁
+            }
+            return isSuccess;
+
         }
 
         /// <summary>
@@ -133,19 +141,48 @@ namespace CGit.Src.Util
         {
             if(File.Exists(path)){//判断是否是文件
                 string text = null;
-                if (rwl.TryEnterReadLock(3000))//尝试获取读锁
+                rwl.AcquireReaderLock(3000);//尝试获取读锁
+                try
                 {
-                    try
-                    {
-                        text = System.IO.File.ReadAllText(@path);
-                    }
-                    finally
-                    {
-                        rwl.ExitReadLock();//释放读取锁
-                    }
-                    return text;
+                    text = System.IO.File.ReadAllText(@path);
                 }
-                return null;
+                finally
+                {
+                    rwl.ReleaseReaderLock();//释放读取锁
+                }
+                return text;
+             }
+             return null;
+        }
+        /// <summary>
+        /// 列出所有文件夹
+        /// </summary>
+        /// <returns></returns>
+        public DirectoryInfo[] listDir()
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            if (dir.Exists)
+            {
+                rwl.AcquireReaderLock(3000);
+                DirectoryInfo[] childs = dir.GetDirectories();
+                return childs;
+                rwl.ReleaseReaderLock();//释放写读锁
+            }
+            return null;
+        }      
+        /// <summary>
+        /// 列出所有文件
+        /// </summary>
+        /// <returns></returns>
+        public FileInfo[] listFile()
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            if (dir.Exists)
+            {
+                rwl.AcquireReaderLock(3000);
+                FileInfo[] childs = dir.GetFiles();
+                return childs;
+                rwl.ReleaseReaderLock();//释放写读锁
             }
             return null;
         }
