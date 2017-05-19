@@ -69,7 +69,7 @@ namespace CGit.Controllers
                 else
                 {
                     showPath = projectPath + repositorySavePath + id + version + "/" + path;
-                }
+                } 
                 SyncFileUtil fileUtil = SingletonSyncFileManager.getInstance(showPath);
                 foreach (DirectoryInfo dir in fileUtil.listDir())
                 {//列出所有文件夹路径
