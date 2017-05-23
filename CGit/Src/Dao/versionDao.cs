@@ -12,6 +12,8 @@ namespace CGit.Src.Dao
     public class VersionDao : BaseDao<MVersion>
     {
         public static String dataBase = "CGit";
+
+
         /// <summary>
         /// 将数据库记录封装成MVersion对象的方法
         /// </summary>

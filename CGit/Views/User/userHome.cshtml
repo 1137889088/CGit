@@ -82,7 +82,7 @@
                             foreach (var repository in ViewBag.repositoryList)
                             {
                                 <div class="repositories">
-                                    <div><a class="text-bold" href="~/Project/projectFiles?id=@repository.id">@repository.name</a></div>
+                                    <div><a class="text-bold" href="~/Project/projectFiles?repositoryId=@repository.id">@repository.name</a></div>
                                     <div class="smaill-text"><span>@repository.describe</span></div>
                                     <div>
                                         <span class="repo-language-color" style="background-color:#563d7c;"></span>@repository.language

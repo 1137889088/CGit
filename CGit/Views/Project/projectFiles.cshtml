@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using CGit.Models;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,10 +8,9 @@
     <link rel="stylesheet" href="~/css/projectFiles.css">
 </head>
 <body>
-
     @{
         //判断是否是当前用户
-        bool isCurrentUser = ((CGit.Models.User)ViewData["user"]).email.Equals(((CGit.Models.User)Session["loginUser"]).email);
+        bool isCurrentUser = ((User)ViewData["user"]).email.Equals(((User)Session["loginUser"]).email);
     }
     <div class="row clearfix">
         <!--左边空位-->
@@ -27,10 +27,10 @@
                           1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z">
                     </path>
                 </svg>
-                <a href="~/User/userHome?email=@(((CGit.Models.User)ViewData["user"]).email)">@(((CGit.Models.User)ViewData["user"]).email)</a>
+                <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)">@(((User)ViewData["user"]).email)</a>
                 <span style="color: #0e0e0e;margin:0 4px 0 4px">/</span>
-                <a href="~/Project/projectFiles?id=@(((CGit.Models.Repository)ViewData["repository"]).id)">
-                    @(((CGit.Models.Repository)ViewData["repository"]).name)
+                <a href="~/Project/projectFiles?id=@(((Repository)ViewData["repository"]).id)">
+                    @(((Repository)ViewData["repository"]).name)
                 </a>
 
                 @if (isCurrentUser)
@@ -52,7 +52,7 @@
             <hr />
             <!--项目标题栏开始-->
             <div>
-                <span style="font-size: 24px">@(((CGit.Models.Repository)ViewData["repository"]).name)</span>
+                <span style="font-size: 24px">@(((Repository)ViewData["repository"]).name)</span>
                 @if (isCurrentUser)
                 {
                     <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
@@ -77,28 +77,16 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" style="height:200px;overflow:scroll">
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li class="disabled">
-                            <a href="#">当前版本</a>
-                        </li>
-                        <li class="divider">
-                        </li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li>
-                            <a href="#">当前版本</a>
-                        </li>
-                        <li class="divider">
-                        </li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
+                        @if (((DirectoryInfo[])ViewData["versions"]) != null)
+                        {
+                            foreach (var version in (DirectoryInfo[])ViewData["versions"])
+                            {
+                                <li>
+                                    <a href="#">@version.Name</a>
+                                </li>
+                            }
+                        }
+
                     </ul>   
                 </div>
                 <!--版本按钮组结束-->
@@ -130,8 +118,8 @@
             </div>
             <!--版本栏结束-->
             <div class="commit-tease">
-                <img height="20" src="~/img/user/@(((CGit.Models.User)ViewData["user"]).email).png" width="20">
-                <a href="#" style="margin-top: 2px">@(((CGit.Models.User)ViewData["user"]).name)</a>
+                <img height="20" src="~/img/user/@(((User)ViewData["user"]).email).png" width="20">
+                <a href="#" style="margin-top: 2px">@(((User)ViewData["user"]).name)</a>
                 <span style="float: right">提交时间：26 Jul 2016</span>
             </div>
             <!--文件信息栏开始-->
@@ -139,26 +127,27 @@
                 <div class="fileLine">
                     <a href="#" class="return"><strong>..</strong></a>
                 </div>
-                <div class="fileLine">
-                    <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
-                    <a href="~/Project/projectFileContent" class="filename">compiler</a>
-                </div>
-                <div class="fileLine">
-                    <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
-                    <a href="#" class="filename">compile</a>
-                </div>
-                <div class="fileLine">
-                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                    <a href="#" class="filename">compiler.xml</a>
-                </div>
-                <div class="fileLine">
-                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                    <a href="#" class="filename">compiler.xml</a>
-                </div>
-                <div class="fileLine">
-                    <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                    <a href="#" class="filename">compiler.xml</a>
-                </div>
+                @if (((DirectoryInfo[])ViewData["dirList"]) != null)
+                {
+                    foreach (var dir in (DirectoryInfo[])ViewData["dirList"])
+                    {
+                        <div class="fileLine">
+                            <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
+                            <a href="~/Project/projectFileContent" class="filename">@dir.Name</a>
+                        </div>
+                    }
+                }
+               
+                @if (((FileInfo[])ViewData["fileList"]) != null)
+                {
+                    foreach (var file in (FileInfo[])ViewData["fileList"])
+                    {
+                        <div class="fileLine">
+                            <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
+                            <a href="#" class="filename">@file.Name</a>
+                        </div>
+                    }
+                }
             </div>
             <!--文件信息栏结束-->
         </div>
@@ -179,14 +168,17 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="createNewVerson">新建版本</h4>
                     </div>
-                    <div class="modal-body" align="center">
-                        <div>版本：<input type="text" placeholder="请输入版本标识..."></div>
-                        <div class="margin"><input id="dialog" type="file" webkitdirectory /></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">新建</button>
-                    </div>
+                    <form action="/Project/newVersion" method="post">
+                        <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)"/>
+                        <div class="modal-body" align="center">
+                            <div>版本：<input type="text" name="versionIdentity" placeholder="请输入版本标识..."></div>
+                            <!--<div class="margin"><input id="dialog" type="file" webkitdirectory /></div>-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">新建版本</button>
+                        </div>
+                    </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>

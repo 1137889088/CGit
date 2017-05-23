@@ -165,8 +165,8 @@ namespace CGit.Src.Util
             {
                 rwl.AcquireReaderLock(3000);
                 DirectoryInfo[] childs = dir.GetDirectories();
-                return childs;
                 rwl.ReleaseReaderLock();//释放写读锁
+                return childs;
             }
             return null;
         }      
@@ -181,8 +181,8 @@ namespace CGit.Src.Util
             {
                 rwl.AcquireReaderLock(3000);
                 FileInfo[] childs = dir.GetFiles();
-                return childs;
                 rwl.ReleaseReaderLock();//释放写读锁
+                return childs;
             }
             return null;
         }

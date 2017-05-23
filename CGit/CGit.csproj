@@ -154,6 +154,9 @@
     <Compile Include="Models\MVersion.cs" />
     <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Src\bll\RepositoryBll.cs" />
+    <Compile Include="Src\bll\UserBll.cs" />
+    <Compile Include="Src\bll\VersionBll.cs" />
     <Compile Include="Src\Constant\ConfigConstant.cs" />
     <Compile Include="Src\Dao\BaseDao.cs" />
     <Compile Include="Global.asax.cs">
@@ -163,7 +166,6 @@
     <Compile Include="Src\Dao\RepositoryDao.cs" />
     <Compile Include="Src\Dao\UserDao.cs" />
     <Compile Include="Src\Dao\VersionDao.cs" />
-    <Compile Include="Src\Service\VersionService.cs" />
     <Compile Include="Src\Util\DBUtil.cs" />
     <Compile Include="Src\Util\EmailUtil.cs" />
     <Compile Include="Src\Util\FileUtil.cs" />

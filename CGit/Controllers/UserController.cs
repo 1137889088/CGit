@@ -107,7 +107,7 @@ namespace CGit.Controllers
                 return Content("更改密码成功");
             }
 
-            return Content("更改密码失败"); ;
+            return Content("更改密码失败");
         }
         /// <summary>
         /// 图片上传
