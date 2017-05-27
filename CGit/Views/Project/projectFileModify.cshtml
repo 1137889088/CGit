@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@using CGit.Models;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,48 +40,58 @@
             </button>
         </div>
         <hr/>
-        <div>
-            <div class="btn-group">
-                <button class="btn btn-default">提交版本</button>
-                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span>
-                </button>
+        <form action="~/Project/saveFile" method="post">
+
+            <input type="hidden" name="repositoryId" value="@ViewData["repositoryId"]" />
+            <input type="hidden" name="version" value="@ViewData["version"]" />
+            <input type="hidden" name="path" value="@ViewData["path"]" />
+            <div>
+                <div class="btn-group">
+                    <button class="btn btn-default">提交版本</button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                        <span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu" style="height:100px;overflow:scroll">
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li class="disabled">
-                            <a href="#">当前版本</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
-                        <li>
-                            <a href="#">当前版本</a>
-                        </li>
-                        <li>
-                            <a href="#">版本一</a>
-                        </li>
+                        @if (((DirectoryInfo[])ViewData["versions"]) != null)
+                        {
+                            foreach (var version in (DirectoryInfo[])ViewData["versions"])
+                            {
+                                if ((version.Name).Equals(ViewData["version"]))
+                                {
+                                    <li class="disabled">
+                                        <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                    </li>
+                                }
+
+                            }
+                        }
                     </ul>
-            </div>
-            <span style="margin: 5px 0px 0 25px; top: 5px">
+                </div>
+                <span style="margin: 5px 0px 0 25px; top: 5px">
                     <a href="#">Home</a>/
                     <a href="#">Library</a>/
                     Data
-            </span>
-            <button type="button" style="float: right; margin-right: 8px" class="btn btn-default ">
-                <a href="#"><span class="glyphicon glyphicon-edit icon"></span>保存文件</a>
-            </button>
-        </div>
-        <div class="commit-tease">
-            <img alt="1137889088" height="20" src="/img/19888480.jpg" width="20">
-            <a href="#" style="margin-top: 2px">1137889088</a>
-            <span style="float: right">提交时间：26 Jul 2016</span>
-        </div>
-        <div id="test-editormd"></div>
+                </span>
+                <button type="submit" style="float: right; margin-right: 8px" class="btn btn-default ">
+                    <span class="glyphicon glyphicon-edit icon"></span>保存文件
+                </button>
+            </div>
+            <div class="commit-tease">
+                <img alt="1137889088" height="20" src="/img/19888480.jpg" width="20">
+                <a href="#" style="margin-top: 2px">1137889088</a>
+                <span style="float: right">提交时间：26 Jul 2016</span>
+            </div>
+
+            <div id="test-editormd">
+                <textarea class="editormd-html-textarea" name="fileContent"></textarea>
+            </div>
+        </form>
     </div>
     <div class="col-md-2 column">
     </div>
@@ -108,8 +119,9 @@
 <script src="~/edit.md/js/editormd.js"></script>
 <script type="text/javascript">
     var testEditor;
-    $(function() {
-        $.get('/edit.md/test.txt', function (md) {
+    $(function () {
+
+        $.get('/Project/getFileConetent?repositoryId=@ViewData["repositoryId"]&version=@ViewData["version"]&path=@ViewData["path"]', function (md) {
             testEditor = editormd("test-editormd", {
                 width: "100%",
                 height: 740,
@@ -137,9 +149,10 @@
                 //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
                 //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
                 //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
-                imageUpload : true,
+                imageUpload : false,
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                imageUploadURL : "/php/upload.php",
+                imageUploadURL: "/php/upload.php",
+                saveHTMLToTextarea : true,
                 onload : function() {
                     console.log('onload', this);
                     //this.fullscreen();

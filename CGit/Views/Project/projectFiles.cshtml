@@ -33,7 +33,7 @@
                     @(((Repository)ViewData["repository"]).name)
                 </a>
 
-                @if (isCurrentUser)
+                @if (!isCurrentUser)
                 {
                     <button type="button" style="float: right;height: 30px" class="btn btn-default">
                         <span class="glyphicon glyphicon-star"></span>
@@ -54,10 +54,11 @@
             <div>
                 <span style="font-size: 24px">@(((Repository)ViewData["repository"]).name)</span>
                 @if (isCurrentUser)
-                {
-                    <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
-                        <span class="glyphicon glyphicon-trash icon"></span>删除仓库
-                    </button>
+                {   <a href="~/User/deleteRepository?id=@(((Repository)ViewData["repository"]).id)">
+                        <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash icon"></span>删除仓库
+                        </button>
+                    </a>
                     <button type="button" data-toggle="modal" data-target="#modifyTitle" style="float: right; margin-right: 8px" class="btn btn-default">
                         <span class="glyphicon glyphicon-edit icon"></span>修改标题
                     </button>
@@ -81,9 +82,19 @@
                         {
                             foreach (var version in (DirectoryInfo[])ViewData["versions"])
                             {
-                                <li>
-                                    <a href="#">@version.Name</a>
-                                </li>
+                                if ((version.Name).Equals(ViewData["version"]))
+                                {
+                                    <li class="disabled">
+                                        <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                    </li>
+                                }
+
                             }
                         }
 
@@ -91,11 +102,13 @@
                 </div>
                 <!--版本按钮组结束-->
                 <!--路径栏开始-->
+                <!--
                 <span style="margin: 5px 0px 0 25px; top: 5px">
                     <a href="#">Home</a>/
                     <a href="#">Library</a>/
                     Data
                 </span>
+                    -->
                 <!--路径栏结束-->
                 @if (isCurrentUser)
                 {
@@ -113,7 +126,7 @@
                     </button>
                 }
                 <button class="btn btn-default" style="float: right">
-                    <a href="#"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
+                    <a href="~/Project/fileDownload?repositoryId=@(((Repository)ViewData["repository"]).id)"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
                 </button>
             </div>
             <!--版本栏结束-->
@@ -124,16 +137,20 @@
             </div>
             <!--文件信息栏开始-->
             <div>
-                <div class="fileLine">
-                    <a href="#" class="return"><strong>..</strong></a>
-                </div>
+                <!--@if (null!=ViewData["path"]&&!"".Equals(ViewData["path"]))
+                {//后退
+                    <div class="fileLine">
+                        <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@ViewData["version"]&path=@ViewData["path"]" class="return"><strong>..</strong></a>
+                    </div>
+                }-->
+               
                 @if (((DirectoryInfo[])ViewData["dirList"]) != null)
                 {
                     foreach (var dir in (DirectoryInfo[])ViewData["dirList"])
                     {
                         <div class="fileLine">
                             <span class="glyphicon glyphicon-folder-close octicon octicon-file-directory top-posion2"></span>
-                            <a href="~/Project/projectFileContent" class="filename">@dir.Name</a>
+                            <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@ViewData["version"]&path=@ViewData["path"]/@dir.Name" class="filename">@dir.Name</a>
                         </div>
                     }
                 }
@@ -144,7 +161,7 @@
                     {
                         <div class="fileLine">
                             <span class="glyphicon glyphicon-file octicon octicon-file-directory top-posion2"></span>
-                            <a href="#" class="filename">@file.Name</a>
+                            <a href="~/Project/projectFileContent?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@ViewData["version"]&path=@ViewData["path"]/@file.Name" class="filename">@file.Name</a>
                         </div>
                     }
                 }
@@ -190,13 +207,20 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">新建文件夹</h4>
                     </div>
-                    <div class="modal-body" align="center">
-                        <div>文件夹：<input type="text" placeholder="请输入文件夹名..."></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">新建</button>
-                    </div>
+                    <form action="/Project/newDir" method="post">
+                        <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                        <input type="hidden" name="version" value="@ViewData["version"]" />
+                        <input type="hidden" name="path" value="@ViewData["path"]" />
+
+                        <div class="modal-body" align="center">
+                            <div>文件夹：<input type="text" name="fileName" placeholder="请输入文件夹名..."></div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">新建</button>
+                        </div>
+                    </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
@@ -208,13 +232,19 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">修改标题</h4>
                     </div>
-                    <div class="modal-body" align="center">
-                        <div class="margin">新标题：<input type="password"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">提交更改</button>
-                    </div>
+                    <form action="~/Project/modifyTitle">
+                        <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                        <input type="hidden" name="version" value="@ViewData["version"]" />
+                        <input type="hidden" name="path" value="@ViewData["path"]" />
+
+                        <div class="modal-body" align="center">
+                            <div class="margin">新标题：<input type="text" name="newTitle" placeholder="请输入新的标题..."></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">提交更改</button>
+                        </div>
+                    </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
@@ -226,13 +256,19 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">新建文件</h4>
                     </div>
-                    <div class="modal-body" align="center">
-                        <div class="margin">文件名 ：<input type="text"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">提交更改</button>
-                    </div>
+                    <form action="/Project/newFile">
+                        <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                        <input type="hidden" name="version" value="@ViewData["version"]" />
+                        <input type="hidden" name="path" value="@ViewData["path"]" />
+
+                        <div class="modal-body" align="center">
+                            <div class="margin">文件名 ：<input type="text" name="fileName" placeholder="请输入文件名..."></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">新建</button>
+                        </div>
+                     </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
@@ -240,41 +276,45 @@
         <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="fileupLoad">上传文件</h4>
-                    </div>
-                    <div class="modal-body" align="center">
-                        <div class="margin"><input type="file"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">上传</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal -->
-        </div>
-    }
-    <script src="~/js/jquery-3.1.1.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
-    <script>
-        createNewVerson.onchange = function (e) {
-            var files = this.files;
-            var table = {};
+                        <form action="/Project/uploadFile" enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                            <input type="hidden" name="version" value="@ViewData["version"]" />
+                            <input type="hidden" name="path" value="@ViewData["path"]" />
 
-            for (var i = 0; i < files.length; i++) {
-                var f = files[i];
-                var dt = new Date(f.lastModified);
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="fileupLoad">上传文件</h4>
+                            </div>
+                            <div class="modal-body" align="center">
+                                <div class="margin"><input type="file" name="file"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">上传</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        }
+        <script src="~/js/jquery-3.1.1.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script>
+            createNewVerson.onchange = function (e) {
+                var files = this.files;
+                var table = {};
+                for (var i = 0; i < files.length; i++) {
+                    var f = files[i];
+                    var dt = new Date(f.lastModified);
 
-                table[i] = {
-                    path: f.webkitRelativePath,
-                    size: f.size,
-                    modified: dt.toLocaleString()
-                };
-            }
-
-            console.table(table);
-        };
-    </script>
-</body>
-</html>
+                    table[i] = {
+                        path: f.webkitRelativePath,
+                        size: f.size,
+                        modified: dt.toLocaleString()
+                    };
+                }
+                console.table(table);
+            };
+        </script>
+    </body>
+    </html>

@@ -79,10 +79,21 @@ namespace CGit.Src.Util
         /// <returns>删除是否成功</returns>
         public bool delete()
         {
-            rwl.AcquireWriterLock(3000);//尝试获取写锁
-            DirectoryInfo di = new DirectoryInfo(path);
-            di.Delete(true);
-            rwl.ReleaseWriterLock();
+          
+            
+            if (Directory.Exists(path))
+            {
+                DirectoryInfo di = new DirectoryInfo(path);
+                rwl.AcquireWriterLock(3000);//尝试获取写锁
+                di.Delete(true);
+                rwl.ReleaseWriterLock();
+            }else if (File.Exists(path))
+            {
+                FileInfo di = new FileInfo(path);
+                rwl.AcquireWriterLock(3000);//尝试获取写锁
+                di.Delete();
+                rwl.ReleaseWriterLock();
+            }
             return true;
         }
         /// <summary>
@@ -115,8 +126,8 @@ namespace CGit.Src.Util
             bool isSuccess = false;
             try
             {
-                FileStream fs = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.Write); //可以指定盘符，也可以指定任意文件名，还可以为word等文件
-                StreamWriter sw = new StreamWriter(fs); // 创建写入流
+                //FileStream fs = new FileStream(@path, FileMode.OpenOrCreate, FileAccess.Write); //可以指定盘符，也可以指定任意文件名，还可以为word等文件
+                StreamWriter sw = new StreamWriter(@path, false, Encoding.Default,1024); // 创建写入流
                 sw.WriteLine(@content); // 写入
                 sw.Close(); //关闭文件
                 isSuccess = true;
@@ -144,7 +155,7 @@ namespace CGit.Src.Util
                 rwl.AcquireReaderLock(3000);//尝试获取读锁
                 try
                 {
-                    text = System.IO.File.ReadAllText(@path);
+                    text = System.IO.File.ReadAllText(@path, Encoding.Default);
                 }
                 finally
                 {

@@ -97,5 +97,19 @@ namespace CGit.Src.Dao
             sqlParameters.Add(new SqlParameter("@language", repository.language));
             return saveAndReturnID(dataBase, sql, sqlParameters);
         }
+        /// <summary>
+        /// 保存用户
+        /// </summary>
+        /// <param name="repository">需要保存的仓库</param>
+        /// <returns></returns>
+        public int updataName(string name, string id)
+        {
+           
+            String sql = "update CGit.repository set repository_name =@name WHERE repository_id = @id";
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@id", id));
+            sqlParameters.Add(new SqlParameter("@name", name));
+            return update(dataBase, sql, sqlParameters);
+        }
     }
 }
