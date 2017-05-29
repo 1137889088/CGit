@@ -25,6 +25,15 @@ namespace CGit.Controllers
             string repositorySavePath = ConfigConstant.repositoryPath;//获取仓库存放位置
             string currentRepositoryPath = projectPath + repositorySavePath + repositoryId;//当前仓库路径
 
+
+
+            Repository repository = repositoryDao.findRepositoryById(repositoryId);//获取仓库的id
+            Src.Dao.UserDao userDao = new Src.Dao.UserDao();
+            User user = userDao.findUserByEmail(repository.email);//根据仓库id查找用户的信息
+
+            ViewData["user"] = user;//设置仓库所属用户信息
+            ViewData["repository"] = repository;//设置仓库信息
+
             DirectoryInfo[] versions = SingletonSyncFileManager.getInstance(currentRepositoryPath).listDir();//版本列表
             ViewData["versions"] = versions;//版本列表
             SingletonSyncFileManager.removeOneOperator(currentRepositoryPath);
@@ -208,6 +217,18 @@ namespace CGit.Controllers
                 string projectPath = Server.MapPath("/");//取得项目决对路径
                 string repositorySavePath = ConfigConstant.repositoryPath;//获取仓库存放位置
                 string currentRepositoryPath = projectPath + repositorySavePath + repositoryId;//当前仓库路径
+
+                Repository repository = repositoryDao.findRepositoryById(repositoryId);//获取仓库的id
+                Src.Dao.UserDao userDao = new Src.Dao.UserDao();
+                User user = userDao.findUserByEmail(repository.email);//根据仓库id查找用户的信息
+
+                ViewData["user"] = user;//设置仓库所属用户信息
+                ViewData["repository"] = repository;//设置仓库信息
+                //List<MVersion> versions = versionDao.findVersionByRepositoryId(id);//根据仓库查找所有版本
+
+                DirectoryInfo[] versions = SingletonSyncFileManager.getInstance(currentRepositoryPath).listDir();//版本列表
+                ViewData["versions"] = versions;//版本列表
+                SingletonSyncFileManager.removeOneOperator(currentRepositoryPath);
                 ViewData["repositoryId"] = repositoryId;
                 ViewData["version"] = version;
                 ViewData["path"] = path;
@@ -220,9 +241,10 @@ namespace CGit.Controllers
             }
             return RedirectToAction("frame", "User");
         }
-        public ActionResult projectComment()
+        public ActionResult projectComment(string repositoryId)
         {
-            return View();
+
+            return RedirectToAction("projectComment", "Comment", repositoryId); ;
         }
         public ActionResult uploadFile(HttpPostedFileBase file, string repositoryId, string version, string path)
         {

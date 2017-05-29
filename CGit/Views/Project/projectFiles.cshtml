@@ -29,7 +29,7 @@
                 </svg>
                 <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)">@(((User)ViewData["user"]).email)</a>
                 <span style="color: #0e0e0e;margin:0 4px 0 4px">/</span>
-                <a href="~/Project/projectFiles?id=@(((Repository)ViewData["repository"]).id)">
+                <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)">
                     @(((Repository)ViewData["repository"]).name)
                 </a>
 
@@ -64,7 +64,7 @@
                     </button>
                 }
                 <button class="btn btn-default" style="float: right;margin-right: 8px">
-                    <a href="~/Project/projectComment" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
+                    <a href="~/Comment/projectComment?repositoryId=@(((Repository)ViewData["repository"]).id)" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
                 </button>
             </div>
             <!--项目标题栏结束-->
@@ -132,8 +132,8 @@
             <!--版本栏结束-->
             <div class="commit-tease">
                 <img height="20" src="~/img/user/@(((User)ViewData["user"]).email).png" width="20">
-                <a href="#" style="margin-top: 2px">@(((User)ViewData["user"]).name)</a>
-                <span style="float: right">提交时间：26 Jul 2016</span>
+                <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)" style="margin-top: 2px">@(((User)ViewData["user"]).name)</a>
+                
             </div>
             <!--文件信息栏开始-->
             <div>

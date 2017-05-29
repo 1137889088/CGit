@@ -13,5 +13,7 @@ namespace CGit.Models
         public String userEmail { get; set; }
         public String content { get; set; }
         public String data { get; set; }
+        public String title { get; set; }
+        
     }
 }

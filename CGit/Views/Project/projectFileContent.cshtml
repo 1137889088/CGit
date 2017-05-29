@@ -10,6 +10,10 @@
 </head>
 <body>
 <div class="row clearfix">
+    @{
+        //判断是否是当前用户
+        bool isCurrentUser = ((User)ViewData["user"]).email.Equals(((User)Session["loginUser"]).email);
+    }
     <!--左边空位-->
     <div class="col-md-2 column">
     </div>
@@ -19,23 +23,41 @@
                 <path fill-rule="evenodd"
                       d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"></path>
             </svg>
-            <a href="#">1137889088</a><span style="color: #0e0e0e;margin:0 4px 0 4px">/</span><a href="#">C0Compiler</a>
-            <button type="button" style="float: right;height: 30px" class="btn btn-default">
-                <span class="glyphicon glyphicon-star"></span>
-                <span>关注</span>
-            </button>
+            <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)">@(((User)ViewData["user"]).email)</a>
+            <span style="color: #0e0e0e;margin:0 4px 0 4px">/</span>
+            <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)">
+                @(((Repository)ViewData["repository"]).name)
+            </a>
+            @if (!isCurrentUser)
+            {
+                <button type="button" style="float: right;height: 30px" class="btn btn-default">
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span>关注</span>
+                </button>
+            }
+            else
+            {
+                <button type="button" disabled style="float: right;height: 30px" class="btn btn-default">
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span>关注</span>
+                </button>
+            }
         </div>
         <hr/>
         <div>
-            <span style="font-size: 24px">教材管理系统</span>
-            <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
-                <span class="glyphicon glyphicon-trash icon"></span>删除仓库
-            </button>
-            <button type="button" style="float: right; margin-right: 8px" class="btn btn-default " data-toggle="modal" data-target="#modifyTitle">
-                <span class="glyphicon glyphicon-edit icon"></span>修改标题
-            </button>
+            <span style="font-size: 24px">@(((Repository)ViewData["repository"]).name)</span>
+            @if (isCurrentUser)
+            {   <a href="~/User/deleteRepository?id=@(((Repository)ViewData["repository"]).id)">
+                <button type="button" style="float: right; margin-top: 0px" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash icon"></span>删除仓库
+                </button>
+            </a>
+                    <button type="button" data-toggle="modal" data-target="#modifyTitle" style="float: right; margin-right: 8px" class="btn btn-default">
+                        <span class="glyphicon glyphicon-edit icon"></span>修改标题
+                    </button>
+            }
             <button class="btn btn-default" style="float: right;margin-right: 8px">
-                <a href="~/Project/projectComment" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
+                <a href="~/Comment/projectComment?repositoryId=@(((Repository)ViewData["repository"]).id)" style="color:#333333"><span class="glyphicon glyphicon-list-alt icon"></span>查看评论</a>
             </button>
         </div>
         <hr/>
@@ -45,24 +67,33 @@
                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a href="#">版本一</a>
-                    </li>
-                    <li class="disabled">
-                        <a href="#">当前版本</a>
-                    </li>
-                    <li class="divider">
-                    </li>
-                    <li>
-                        <a href="#">版本一</a>
-                    </li>
+                    @if (((DirectoryInfo[])ViewData["versions"]) != null)
+                    {
+                        foreach (var version in (DirectoryInfo[])ViewData["versions"])
+                        {
+                            if ((version.Name).Equals(ViewData["version"]))
+                            {
+                                <li class="disabled">
+                                    <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)&version=@version.Name">@version.Name</a>
+                                </li>
+                            }
+
+                        }
+                    }
                 </ul>
             </div>
-            <span style="margin: 5px 0px 0 25px; top: 5px">
+            <!--<span style="margin: 5px 0px 0 25px; top: 5px">
                     <a href="#">Home</a>/
                     <a href="#">Library</a>/
                     Data
             </span>
+                -->
             <button class="btn btn-default"data-toggle="modal" data-target="#newVerson" style="float: right">
                 <a href="#"><span class="glyphicon glyphicon-plus icon"></span>新建版本</a>
             </button>
@@ -70,13 +101,13 @@
                 <a href="~/Project/projectFileModify?repositoryId=@ViewData["repositoryId"]&version=@ViewData["version"]&path=@ViewData["path"]"><span class="glyphicon glyphicon-edit icon"></span>修改文件</a>
             </button>
             <button class="btn btn-default" style="float: right">
-                <a href="#"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
+                <a href="~/Project/fileDownload?repositoryId=@(((Repository)ViewData["repository"]).id)"><span class="glyphicon glyphicon-download icon"></span>下载项目</a>
             </button>
         </div>
         <div class="commit-tease">
-            <img alt="1137889088" height="20" src="~/img/19888480.jpg" width="20">
-            <a href="#" style="margin-top: 2px">1137889088</a>
-            <span style="float: right">提交时间：26 Jul 2016</span>
+            <img height="20" src="~/img/user/@(((User)ViewData["user"]).email).png" width="20">
+            <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)" style="margin-top: 2px">@(((User)ViewData["user"]).name)</a>
+           
         </div>
         <!-- -->
         <div>
@@ -87,43 +118,52 @@
     <div class="col-md-2 column">
     </div>
 </div>
-<!-- 新版本模态框（Modal） -->
-<div class="modal fade" id="newVerson" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">新建版本</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div>版本：<input type="text" placeholder="请输入版本标识..."></div>
-                <div class="margin"><input type="file"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">新建</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<!-- 修改标题模态框（Modal） -->
-<div class="modal fade" id="modifyTitle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">修改标题</h4>
-            </div>
-            <div class="modal-body" align="center">
-                <div class="margin">新标题：<input type="password"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
+    <!-- 新版本模态框（Modal） -->
+    <div class="modal fade" id="newVerson" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="createNewVerson">新建版本</h4>
+                </div>
+                <form action="/Project/newVersion" method="post">
+                    <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                    <div class="modal-body" align="center">
+                        <div>版本：<input type="text" name="versionIdentity" placeholder="请输入版本标识..."></div>
+                        <!--<div class="margin"><input id="dialog" type="file" webkitdirectory /></div>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">新建版本</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 修改标题模态框（Modal） -->
+    <div class="modal fade" id="modifyTitle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">修改标题</h4>
+                </div>
+                <form action="~/Project/modifyTitle">
+                    <input type="hidden" name="repositoryId" value="@(((Repository)ViewData["repository"]).id)" />
+                    <input type="hidden" name="version" value="@ViewData["version"]" />
+                    <input type="hidden" name="path" value="@ViewData["path"]" />
+
+                    <div class="modal-body" align="center">
+                        <div class="margin">新标题：<input type="text" name="newTitle" placeholder="请输入新的标题..."></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交更改</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
 <script src="~/js/jquery-3.1.1.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
 <link href="~/highlight/styles/monokai-sublime.css" rel="stylesheet" />

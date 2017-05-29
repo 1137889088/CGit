@@ -40,6 +40,7 @@ namespace CGit.Controllers
             if (user == null)//防止不存在该email的用户
             {
                 user = (User)Session["loginUser"];
+                email = user.email;
             }
             if (user == null)
             {

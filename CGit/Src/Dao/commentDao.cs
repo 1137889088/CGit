@@ -25,6 +25,7 @@ namespace CGit.Src.Dao
             comment.userEmail = reader.GetString(2);
             comment.content = reader.GetString(3);
             comment.data= reader.GetString(4);
+            comment.title = reader.GetString(5); 
             return comment;
         }
 
@@ -48,12 +49,13 @@ namespace CGit.Src.Dao
         /// <returns></returns>
         public int save(Comment comment)
         {
-            String sql = "INSERT INTO CGit.comment (repository_id, user_email, content, data) VALUES(@repository_id, @user_email, @content, @data)";
+            String sql = "INSERT INTO CGit.comment (repository_id, user_email, content, data,title) VALUES(@repository_id, @user_email, @content, @data,@title)";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@repository_id", comment.repositoryId));
             sqlParameters.Add(new SqlParameter("@user_email", comment.userEmail));
             sqlParameters.Add(new SqlParameter("@content", comment.content));
             sqlParameters.Add(new SqlParameter("@data", comment.data));
+            sqlParameters.Add(new SqlParameter("@title", comment.title)); 
             return update(dataBase, sql, sqlParameters);
         }
 
