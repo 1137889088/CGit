@@ -111,5 +111,11 @@ namespace CGit.Src.Dao
             sqlParameters.Add(new SqlParameter("@name", name));
             return update(dataBase, sql, sqlParameters);
         }
+
+        public List<Repository> searchRepository(string keyWord)
+        {
+            String sql = "SELECT * FROM CGit.repository WHERE repository_name like '%" + keyWord + "%' OR repository_describe like '%" + keyWord + "%' OR repository_language like '%" + keyWord + "%'";
+            return query(dataBase, sql, null, userHandler);
+        }
     }
 }

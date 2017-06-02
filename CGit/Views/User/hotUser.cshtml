@@ -11,7 +11,7 @@
 <div class="jumbotron">
     <div style="margin-left: 5%">
         <h1>
-            这些是近期来关注度比较高的一些项目
+            这是较为活跃的用户
         </h1>
         <p>
             这些项目一般质量较高；<br/>
@@ -22,31 +22,27 @@
 <div class="col-md-12 column" style="width: 70%">
     <div>
          <ul>
-            @if (((List<Repository>)ViewData["repositoryList"]) != null)
-            {
-                foreach (var repository in ((List<Repository>)ViewData["repositoryList"]))
-                {
-                    <li style="border-top: 1px solid #eee;">
-                        <h2>
-                            <a href="~/User/userHome?email=@repository.email">@repository.email</a>/<a href="~/Project/projectFiles?repositoryId=@repository.id">@repository.name</a>
-                        </h2>
-                        <p class="overHidden">
-                            @repository.describe
-                        </p>
-                        <p>
-                            <span class="repo-language-color ml-0" style="background-color:#555555;"></span>
-                            语言 :@repository.language &nbsp&nbsp&nbsp
-                        </p>
-                    </li>
-                }
-            }
-            else
-            {
-                <div style="color:#666;" align="center">还没有仓库！</div>
-            }
+             @if (((List<User>)ViewData["userList"]) != null)
+             {
+                 foreach (var user in ((List<User>)ViewData["userList"]))
+                 {
+                     <li style="border-bottom: 1px solid #eee;">
+                         <h2>
+                             <a href="~/User/userHome?email=@user.email">@user.name</a>
+                         </h2>
+                         <p class="overHidden">
+                             @user.resume
+                         </p>
+                     </li>
+                 }
+             }
+             else
+             {
+                 <div style="color:#666;" align="center">还没用户！</div>
+             }
         </ul>
     </div>
-  
+
 </div>
 <script src="~/js/jquery-3.1.1.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>

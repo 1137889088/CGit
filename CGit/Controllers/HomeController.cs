@@ -1,4 +1,6 @@
 ﻿using CGit.Models;
+using CGit.Src.bll;
+using CGit.Src.Dao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,6 +112,29 @@ namespace CGit.Controllers
                 Src.Util.EmailUtil.SentMail(email, "您的密码找回成功，密码为" + user.pwd, "CGit找回密码", "CGit");
             }
             return View("findPwd");
+        }
+        public ActionResult search(string keyWord)
+        {
+            UserBll userBll = new UserBll();
+            List<User> userList = userBll.searchUser(keyWord);
+            ViewData["userList"] = userList;
+            RepositoryBll repositoryBll = new RepositoryBll();
+            List<Repository> repositoryList = repositoryBll.searchRepository(keyWord);
+            ViewData["repositoryList"] = repositoryList;
+
+            RepositoryDao repositoryDao = new RepositoryDao();
+            FollowRepositoryBll followRepositoryBll = new FollowRepositoryBll();
+            List<string> repositoryCountList = followRepositoryBll.findRepositoryAndCount();
+            if (repositoryCountList != null)
+            {
+                List<Repository> repositorylist = new List<Repository>();
+                foreach (string userEmail in repositoryCountList)
+                {
+                    repositorylist.Add(repositoryDao.findRepositoryById(userEmail));
+                }
+                ViewData["repositoryCountList"] = repositorylist;
+            }
+            return View("searchResult");
         }
     }
 }

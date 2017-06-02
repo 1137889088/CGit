@@ -9,8 +9,17 @@
 </head>
 <body>
     @{
+        bool isCurrentUser = false;
         //判断是否是当前用户
-        bool isCurrentUser = (((CGit.Models.User)ViewData["user"]).email).Equals(((CGit.Models.User)Session["loginUser"]).email);
+        if (((CGit.Models.User)Session["loginUser"]) == null)
+        {
+            isCurrentUser = false;
+        }
+        else
+        {
+            isCurrentUser = (((CGit.Models.User)ViewData["user"]).email).Equals(((CGit.Models.User)Session["loginUser"]).email);
+        }
+
     }
     <div class="container frist">
         <div class="row clearfix">
@@ -27,33 +36,47 @@
                         <span class="vcard-fullname d-block">@(((CGit.Models.User)ViewData["user"]).name)</span>
                         <span class="vcard-username d-block">@(((CGit.Models.User)ViewData["user"]).email)</span>
                     </h1>
-                        <!--disabled按钮不可用 display:none不显示-->
-                       
-                        @if (isCurrentUser) {
-                            //如果查找的用户不是当前登录的用户
-                            <button type = "button" disabled class="btn btn-default btn-long">关注</button>
+                    <!--disabled按钮不可用 display:none不显示-->
+
+                    @if (!isCurrentUser)
+                    {
+                        if (((CGit.Models.User)Session["loginUser"]) != null)
+                        {
+                            if (((bool)ViewData["isFollow"]))
+                            {
+                                <form action="~/User/unfollow" method="get">
+                                    <input name="follow_email" type="hidden" value="@(((CGit.Models.User)ViewData["user"]).email)"/>
+                                    <button type="submit" class="btn btn-default btn-long">取消关注</button>
+                                </form>
+
+                            }
+                            else
+                            {
+                                <form action="~/User/follow" name="follow_email" method="get">
+                                    <input name="follow_email" type="hidden" value="@(((CGit.Models.User)ViewData["user"]).email)" />
+                                    <button type="submit" class="btn btn-default btn-long">关注</button>
+                                </form>
+                            }
                         }
-                        else
-                        {//待增加（如果这个用户已经被关注的话需要在进行判断是否可以关注)
-                            <button type="button" class="btn btn-default btn-long">关注</button>
-                        }
-                    <hr/>
+
+                    }
+                    <hr />
                     <div style="color: #6A737D">
                         <svg aria-hidden="true" height="16" width="12">
                             <path fill-rule="evenodd"
-                                  d="M6 0C2.69 0 0 2.5 0 5.5 0 10.02 6 16 6 16s6-5.98 6-10.5C12 
-                                  2.5 9.31 0 6 0zm0 14.55C4.14 12.52 1 8.44 1 5.5 1 3.02 3.25 1 6 1c1.34 0 2.61.48 3.56 
-                                  1.36.92.86 1.44 1.97 1.44 3.14 0 2.94-3.14 7.02-5 9.05zM8 5.5c0 1.11-.89 2-2 2-1.11 
+                                  d="M6 0C2.69 0 0 2.5 0 5.5 0 10.02 6 16 6 16s6-5.98 6-10.5C12
+                                  2.5 9.31 0 6 0zm0 14.55C4.14 12.52 1 8.44 1 5.5 1 3.02 3.25 1 6 1c1.34 0 2.61.48 3.56
+                                  1.36.92.86 1.44 1.97 1.44 3.14 0 2.94-3.14 7.02-5 9.05zM8 5.5c0 1.11-.89 2-2 2-1.11
                                   0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z"></path>
-                        </svg>  
+                        </svg>
                         @(((CGit.Models.User)ViewData["user"]).area)
                     </div>
-                    <hr/>
+                    <hr />
                     <p>
                         @(((CGit.Models.User)ViewData["user"]).resume)
                     </p>
                     @if (isCurrentUser)
-                        //如果查找的用户不是当前登录的用户就不显示
+                    //如果查找的用户不是当前登录的用户就不显示
                     {
                         <button style="margin-top: 10px" class="btn btn-default btn-long" data-toggle="modal"
                                 data-target="#modifyPwd">
@@ -65,17 +88,17 @@
 
                 <div class="col-md-8 column">
                     <div>
-                        <div>
-                            <span style="font-size: 24px;">个人仓库</span>
-                            <button type="button" data-toggle="modal" data-target="#newRepository"
-                                    style="float: right; margin-right: 8px" class="btn btn-default ">
-                                @if (isCurrentUser)
-                                {
+                        @if (isCurrentUser)
+                        {
+                            <div>
+                                <span style="font-size: 24px;">个人仓库</span>
+                                <button type="button" data-toggle="modal" data-target="#newRepository"
+                                        style="float: right; margin-right: 8px" class="btn btn-default ">
                                     <span class="glyphicon glyphicon-edit icon"></span> <span>新建仓库</span>
-                                }
-                            </button>
-                        </div>
-                        <hr/>
+                                </button>
+                            </div>
+                        }
+                        <hr />
                         <!--遍历list-->
                         @if (ViewBag.repositoryList != null)//如果有仓库
                         {
@@ -88,7 +111,7 @@
                                         <span class="repo-language-color" style="background-color:#563d7c;"></span>@repository.language
                                         <span class="glyphicon glyphicon-star" style="margin-left: 10px"></span>1111<!--待改为从数据库中查找的值-->
                                         @if (isCurrentUser)
-                                            //如果查找的用户不是当前登录的用户就不显示
+                                        //如果查找的用户不是当前登录的用户就不显示
                                         {
                                             <a class="float-right" href="~/User/deleteRepository?id=@repository.id">删除仓库</a>
                                         }

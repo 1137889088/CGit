@@ -1,4 +1,5 @@
 ﻿using CGit.Models;
+using CGit.Src.bll;
 using CGit.Src.Constant;
 using CGit.Src.Dao;
 using CGit.Src.Util;
@@ -20,15 +21,30 @@ namespace CGit.Controllers
         {
             return View();
         }
+
+        public ActionResult follow(string follow_email)
+        {
+            User user = (User)Session["loginUser"];
+            FollowUserBll bll = new FollowUserBll();
+            bll.save(user.email, follow_email);
+            return userHome(follow_email);
+        }
+        public ActionResult unfollow(string follow_email)
+        {
+            User user = (User)Session["loginUser"];
+            FollowUserBll bll = new FollowUserBll();
+            bll.delete(user.email, follow_email);
+            return userHome(follow_email);
+        }
         /// <summary>
         /// 转到用户主页
         /// </summary>
         /// <returns></returns>
-        public ActionResult userHome()
+        public ActionResult userHome(string email)
         {
-            string email = Request["email"];//获取显示的用户email的主页
+            //获取显示的用户email的主页
             User user = null;
-            if (email == null || email.Equals(""))//如果email为空证明是当前登录的用户
+            if (email == null || email.Equals(""))//如果email为空是查看自己的信息
             {
                 user = (User)Session["loginUser"];
                 email = user.email;
@@ -40,12 +56,23 @@ namespace CGit.Controllers
             if (user == null)//防止不存在该email的用户
             {
                 user = (User)Session["loginUser"];
+                if (user == null)
+                {
+                    return RedirectToAction("login", "Home");//如果用户不存在就跳转到首页
+                }
                 email = user.email;
             }
-            if (user == null)
+            User currentUser = (User)Session["loginUser"];
+            if (currentUser != null)
             {
-                return RedirectToAction("login", "Home");//如果还不存在就跳转到登录页面
+                FollowUserBll bll = new FollowUserBll();
+                ViewData["isFollow"] = bll.isFollow(currentUser.email, email);//判断是否关注
             }
+            else
+            {
+                ViewData["isFollow"] = false;
+            }
+          
 
             List<Repository> repositoryList = repositoryDao.findAllRepositoryByEmail(email);//查找所有仓库
             ViewData["repositoryList"] = repositoryList;//将仓库数据放入viewData
@@ -54,10 +81,41 @@ namespace CGit.Controllers
         }
         /// <summary>
         /// 我的关注
-        /// </summary>n m
+        /// </summary>
         /// <returns></returns>
         public ActionResult myFollow()
         {
+            if ((User)Session["loginUser"] == null)
+            {
+                return RedirectToAction("login", "Home");//如果用户不存在就跳转到首页
+            }
+            string email = ((CGit.Models.User)Session["loginUser"]).email;
+
+            FollowUserBll userBll = new FollowUserBll();
+            List<string> userList = userBll.findAllFollowUserByUserEmail(email);
+            if (userList != null)
+            {
+                List<User> userlist = new List<User>();
+                foreach (string userEmail in userList)
+                {
+                    userlist.Add(userDao.findUserByEmail(userEmail));
+                }
+                ViewData["userList"] = userlist;
+            }
+          
+
+            FollowRepositoryBll repositoryBll = new FollowRepositoryBll();
+            List<string> repositoryList = repositoryBll.findAllFollowRepositoryByRepositoryEmail(email);
+            if (repositoryList != null)
+            {
+                List<Repository> repositorylist = new List<Repository>();
+                foreach (string userEmail in userList)
+                {
+                    repositorylist.Add(repositoryDao.findRepositoryById(userEmail));
+                }
+                ViewData["repositoryList"] = repositoryList;
+            }
+              
             return View();
         }
         /// <summary>
@@ -75,6 +133,32 @@ namespace CGit.Controllers
         /// <returns></returns>
         public ActionResult hotProject()
         {
+            FollowRepositoryBll repositoryBll = new FollowRepositoryBll();
+            List<string> repositoryList = repositoryBll.findRepositoryAndCount();
+            if (repositoryList != null)
+            {
+                List<Repository> repositorylist = new List<Repository>();
+                foreach (string userEmail in repositoryList)
+                {
+                    repositorylist.Add(repositoryDao.findRepositoryById(userEmail));
+                }
+                ViewData["repositoryList"] = repositorylist;
+            }
+            return View();
+        }
+        public ActionResult hotUser()
+        {
+            FollowUserBll userBll = new FollowUserBll();
+            List<string> userList = userBll.findUserAndCount(); ;
+            if (userList != null)
+            {
+                List<User> userlist = new List<User>();
+                foreach (string userEmail in userList)
+                {
+                    userlist.Add(userDao.findUserByEmail(userEmail));
+                }
+                ViewData["userList"] = userlist;
+            }
             return View();
         }
         /// <summary>
@@ -143,7 +227,7 @@ namespace CGit.Controllers
                 SingletonSyncFileManager.getInstance(path).createDictionary();
                 SingletonSyncFileManager.removeOneOperator(path);
             }
-            return userHome();
+            return userHome(null);
         }
         /// <summary>
         /// 删除仓库
@@ -161,7 +245,7 @@ namespace CGit.Controllers
                 SingletonSyncFileManager.removeOneOperator(path);
                 repositoryDao.deleteRepositoryById(id);
             }
-            return userHome();
+            return userHome(null);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CGit.Models;
+using CGit.Src.bll;
 using CGit.Src.Constant;
 using CGit.Src.Dao;
 using CGit.Src.Util;
@@ -15,6 +16,20 @@ namespace CGit.Controllers
         RepositoryDao repositoryDao = new RepositoryDao();
         //VersionDao versionDao = new VersionDao();
         // GET: ProjectrepositoryId
+        public ActionResult follow(string repositoryId)
+        {
+            User user = (User)Session["loginUser"];
+            FollowRepositoryBll bll = new FollowRepositoryBll();
+            bll.save(user.email, repositoryId);
+            return projectFiles(repositoryId, null,null);
+        }
+        public ActionResult unfollow(string repositoryId)
+        {
+            User user = (User)Session["loginUser"];
+            FollowRepositoryBll bll = new FollowRepositoryBll();
+            bll.delete(user.email, repositoryId);
+            return projectFiles(repositoryId, null, null);
+        }
         public ActionResult projectFileModify(string repositoryId, string version, string path)
         {
             ViewData["repositoryId"] = repositoryId;
@@ -119,6 +134,18 @@ namespace CGit.Controllers
                 Repository repository = repositoryDao.findRepositoryById(repositoryId);//获取仓库的id
                 Src.Dao.UserDao userDao = new Src.Dao.UserDao();
                 User user = userDao.findUserByEmail(repository.email);//根据仓库id查找用户的信息
+
+                User currentUser = (User)Session["loginUser"];
+                if (currentUser != null)
+                {
+                    FollowRepositoryBll bll = new FollowRepositoryBll();
+                    ViewData["isFollow"] = bll.isFollow(currentUser.email, repositoryId);//判断是否关注
+                }
+                else
+                {
+                    ViewData["isFollow"] = false;
+                }
+
 
                 string projectPath = Server.MapPath("/");//取得项目决对路径
                 string repositorySavePath = ConfigConstant.repositoryPath;//获取仓库存放位置

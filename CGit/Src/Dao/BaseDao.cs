@@ -46,7 +46,6 @@ namespace CGit.Dao
             catch (Exception e)
             {
                 sqlTransaction.Rollback();
-                throw new Exception(e.ToString());
             }
             finally
             {
@@ -91,7 +90,6 @@ namespace CGit.Dao
             catch (Exception e)
             {
                 sqlTransaction.Rollback();
-                throw new Exception(e.ToString());
             }
             finally
             {

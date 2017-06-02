@@ -10,7 +10,16 @@
 <body>
     @{
         //判断是否是当前用户
-        bool isCurrentUser = ((User)ViewData["user"]).email.Equals(((User)Session["loginUser"]).email);
+        bool isCurrentUser = false;
+        //判断是否是当前用户
+        if (((CGit.Models.User)Session["loginUser"]) == null)
+        {
+            isCurrentUser = false;
+        }
+        else
+        {
+            isCurrentUser = (((CGit.Models.User)ViewData["user"]).email).Equals(((CGit.Models.User)Session["loginUser"]).email);
+        }
     }
     <div class="row clearfix">
         <!--左边空位-->
@@ -35,17 +44,24 @@
 
                 @if (!isCurrentUser)
                 {
-                    <button type="button" style="float: right;height: 30px" class="btn btn-default">
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span>关注</span>
-                    </button>
-                }
-                else
-                {
-                    <button type="button" disabled style="float: right;height: 30px" class="btn btn-default">
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span>关注</span>
-                    </button>
+                    if (((CGit.Models.User)Session["loginUser"]) != null)
+                    {
+                        if (((bool)ViewData["isFollow"]))
+                        {
+                            <form action="~/Project/unfollow" method="get">
+                                <input name="repositoryId" type="hidden" value="@(((Repository)ViewData["repository"]).id)" />
+                                <button type="submit" class="btn btn-default btn-long">取消关注</button>
+                            </form>
+
+                        }
+                        else
+                        {
+                            <form action="~/Project/follow" name="follow_email" method="get">
+                                <input name="repositoryId" type="hidden" value="@(((Repository)ViewData["repository"]).id)" />
+                                <button type="submit" class="btn btn-default btn-long">关注</button>
+                            </form>
+                        }
+                    }
                 }
             </div>
             <!--顶部项目用户和项目名结束-->

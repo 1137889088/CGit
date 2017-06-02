@@ -13,7 +13,16 @@
 <div class="row clearfix">
     @{
         //判断是否是当前用户
-        bool isCurrentUser = ((User)ViewData["user"]).email.Equals(((User)Session["loginUser"]).email);
+        bool isCurrentUser = false;
+        //判断是否是当前用户
+        if (((CGit.Models.User)Session["loginUser"]) == null)
+        {
+            isCurrentUser = false;
+        }
+        else
+        {
+            isCurrentUser = (((CGit.Models.User)ViewData["user"]).email).Equals(((CGit.Models.User)Session["loginUser"]).email);
+        }
     }
     <!--左边空位-->
     <div class="col-md-2 column">
@@ -26,7 +35,7 @@
             </svg>
             <a href="~/User/userHome?email=@(((User)ViewData["user"]).email)">@(((User)ViewData["user"]).email)</a>
             <span style="color: #0e0e0e;margin:0 4px 0 4px">/</span>
-            <a href="~/Project/projectFiles?id=@(((Repository)ViewData["repository"]).id)">
+            <a href="~/Project/projectFiles?repositoryId=@(((Repository)ViewData["repository"]).id)">
                 @(((Repository)ViewData["repository"]).name)
             </a>
             @if (!isCurrentUser)
@@ -47,7 +56,7 @@
         <hr />
         <div>
             <span style="font-size: 24px">教材管理系统</span>
-            <button type="button" data-toggle="modal" data-target="#addComment" style="float: right; margin-right: 8px"
+            <button type="button" id="addComment" data-toggle="modal" data-target="#addComment" style="float: right; margin-right: 8px"
                     class="btn btn-default ">
                 <span class="glyphicon glyphicon-edit icon"></span>添加评论
             </button>
@@ -106,6 +115,13 @@
         </div><!-- /.modal -->
     </div>
 </div>
-
+@if (((CGit.Models.User)Session["loginUser"]) == null)
+{
+    <script type="text/javascript">
+        $("#addComment").click(function() {
+            window.parent.location.href = "/Home/login";
+        })
+    </script>
+}
 </body>
 </html>

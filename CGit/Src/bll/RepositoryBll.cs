@@ -31,5 +31,11 @@ namespace CGit.Src.bll
         {
             return dao.saveAndReturnId(repository);
         }
+        public List<Repository> searchRepository(string keyWord)
+        {
+            return dao.searchRepository(keyWord);
+        }
+
+        
     }
 }

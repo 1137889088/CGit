@@ -11,8 +11,16 @@
 <body>
 <div class="row clearfix">
     @{
+        bool isCurrentUser = false;
         //判断是否是当前用户
-        bool isCurrentUser = ((User)ViewData["user"]).email.Equals(((User)Session["loginUser"]).email);
+        if (((CGit.Models.User)Session["loginUser"]) == null)
+        {
+            isCurrentUser = false;
+        }
+        else
+        {
+            isCurrentUser = (((CGit.Models.User)ViewData["user"]).email).Equals(((CGit.Models.User)Session["loginUser"]).email);
+        }
     }
     <!--左边空位-->
     <div class="col-md-2 column">

@@ -36,6 +36,12 @@ namespace CGit.Src.Dao
             String sql = "SELECT * from CGit.users";
             return query(dataBase, sql, null, userHandler);
         }
+
+        public List<User> searchUser(string keyWord)
+        {
+            String sql = "SELECT * from CGit.users WHERE email LIKE '%"+keyWord+ "%' OR name LIKE '%" + keyWord + "%' OR resume LIKE '%" + keyWord + "%' OR area LIKE '%" + keyWord + "%'";
+            return query(dataBase, sql, null, userHandler);
+        }
         /// <summary>
         /// 根据E-mail查找用户
         /// </summary>
@@ -104,6 +110,7 @@ namespace CGit.Src.Dao
         /// <returns></returns>
         public int updateUser(User user)
         {
+
             String sql = "UPDATE CGit.users  SET name = @name ,pwd = @pwd ,area = @area ,resume = @resume where email = @email";
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@email", user.email));
@@ -113,5 +120,6 @@ namespace CGit.Src.Dao
             sqlParameters.Add(new SqlParameter("@resume", user.resume));
             return update(dataBase, sql, sqlParameters);
         }
+
     }
 }
